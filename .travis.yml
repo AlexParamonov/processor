@@ -1,0 +1,15 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - ruby-head
+  - rbx-19mode
+
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: rbx-19mode
+
+before_install: gem install bundler --pre
+
+script:
+  - "bundle exec rake ci:all"

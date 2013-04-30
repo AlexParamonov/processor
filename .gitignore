@@ -1,0 +1,16 @@
+*.gem
+*.rbc
+/.bundle
+
+Gemfile.lock
+/pkg
+/tmp
+/tags
+
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.swo
