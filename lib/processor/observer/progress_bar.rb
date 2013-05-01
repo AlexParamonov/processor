@@ -11,7 +11,7 @@ module Processor
         progress_bar.inc
       end
 
-      def finalize(migration)
+      def finalize(runner)
         progress_bar.finish
       end
 

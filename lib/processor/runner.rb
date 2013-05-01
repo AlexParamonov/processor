@@ -17,11 +17,11 @@ module Processor
               begin
                 register_event :before_proccessing, thread_record
 
-                result = migrate(thread_record)
+                result = process(thread_record)
 
                 register_event :after_proccessing, thread_record, result
               rescue RuntimeError => exception
-                register_event :record_migration_error, thread_record, exception
+                register_event :record_processing_error, thread_record, exception
               end
             end
           end
@@ -32,7 +32,7 @@ module Processor
 
       register_event :finalize, self
     rescue Exception => exception
-      register_event :migration_error, self, exception
+      register_event :processing_error, self, exception
       raise exception
     end
 
@@ -51,7 +51,7 @@ module Processor
     end
 
     protected
-    def migrate(record)
+    def process(record)
       raise NotImplementedError
     end
 
@@ -73,7 +73,7 @@ module Processor
     def recursion_preventer
       @counter ||= 0
       @counter += 1
-      raise Exception, "Migration fall into recursion. Check logs." if @counter > (total_records * 1.1).round + 10
+      raise Exception, "Processing fall into recursion. Check logs." if @counter > (total_records * 1.1).round + 10
     end
   end
 end

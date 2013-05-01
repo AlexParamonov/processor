@@ -10,9 +10,9 @@ describe Processor::Runner do
     runner.run
   end
 
-  it "should migrate each found record" do
+  it "should process each found record" do
     records = [mock(:one), mock(:two), mock(:three)]
-    records.each { |record| runner.should_receive(:migrate).with(record) }
+    records.each { |record| runner.should_receive(:process).with(record) }
     runner.stub(:fetch_records_batch).and_return(records, [])
     runner.run
   end
@@ -26,13 +26,13 @@ describe Processor::Runner do
   describe "exception handling" do
     let(:record) { stub }
 
-    it "should register a record_migration_error event if record migration raised RuntimeError" do
-      runner.stub(:migrate).and_raise(RuntimeError)
+    it "should register a record_processing_error event if processing a record raised RuntimeError" do
+      runner.stub(:process).and_raise(RuntimeError)
 
       event_triggered = false
       runner.should_receive(:register_event) do |event_name, failed_record, exception|
-        next if event_name != :record_migration_error
-        event_name.should eq :record_migration_error
+        next if event_name != :record_processing_error
+        event_name.should eq :record_processing_error
         failed_record.should eq record
         exception.should be_a RuntimeError
         event_triggered = true
@@ -44,14 +44,14 @@ describe Processor::Runner do
       event_triggered.should be_true
     end
 
-    it "should register a migration_error event and reraise if record migration raised Exception" do
-      runner.stub(:migrate).and_raise(Exception)
+    it "should register a processing_error event and reraise if processing a record raised Exception" do
+      runner.stub(:process).and_raise(Exception)
 
       event_triggered = false
-      runner.should_receive(:register_event) do |event_name, migration, exception|
-        next if event_name != :migration_error
-        event_name.should eq :migration_error
-        migration.should eq runner
+      runner.should_receive(:register_event) do |event_name, runner_object, exception|
+        next if event_name != :processing_error
+        event_name.should eq :processing_error
+        runner_object.should eq runner
         exception.should be_a Exception
         event_triggered = true
       end.any_number_of_times
@@ -62,14 +62,14 @@ describe Processor::Runner do
       event_triggered.should be_true
     end
 
-    it "should register a migration_error event and reraise if fetch_records_batch raised" do
+    it "should register a processing_error event and reraise if fetch_records_batch raised" do
       runner.stub(:fetch_records_batch).and_raise(RuntimeError)
 
       event_triggered = false
-      runner.should_receive(:register_event) do |event_name, migration, exception|
-        next if event_name != :migration_error
-        event_name.should eq :migration_error
-        migration.should eq runner
+      runner.should_receive(:register_event) do |event_name, runner_object, exception|
+        next if event_name != :processing_error
+        event_name.should eq :processing_error
+        runner_object.should eq runner
         exception.should be_a RuntimeError
         event_triggered = true
       end.any_number_of_times
@@ -101,15 +101,15 @@ describe Processor::Runner do
     it "should not allow infinit recursion" do
       runner.stub(total_records: 4)
       runner.stub(:fetch_records_batch).and_return([:one, :two])
-      runner.should_receive(:migrate).at_most(100).times
-      expect { runner.run }.to raise_error(Exception, /Migration fall into recursion/)
+      runner.should_receive(:process).at_most(100).times
+      expect { runner.run }.to raise_error(Exception, /Processing fall into recursion/)
     end
 
     it "should have 10% + 10 rerurns window" do
       runner.stub(total_records: 100)
       runner.stub(:fetch_records_batch).and_return([:one, :two])
-      runner.should_receive(:migrate).exactly(120).times
-      expect { runner.run }.to raise_error(Exception, /Migration fall into recursion/)
+      runner.should_receive(:process).exactly(120).times
+      expect { runner.run }.to raise_error(Exception, /Processing fall into recursion/)
     end
   end
 end
