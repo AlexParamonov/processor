@@ -1,5 +1,5 @@
 module Processor
-  class Runner
+  class ThreadRunner
     def initialize(*observers)
       @observers = observers
     end

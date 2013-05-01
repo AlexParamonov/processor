@@ -1,8 +1,8 @@
 require 'spec_helper_lite'
-require 'processor/runner'
+require 'processor/thread_runner'
 
-describe Processor::Runner do
-  let(:runner) { Processor::Runner.new }
+describe Processor::ThreadRunner do
+  let(:runner) { Processor::ThreadRunner.new }
 
   it "should fetch_records_batch till get an empty results" do
     runner.stub(:have_records?).and_return(true, true, false)
@@ -19,7 +19,7 @@ describe Processor::Runner do
 
   it "should broadcast events to all observers" do
     observers = 3.times.map{ stub.tap{ |observer| observer.should_receive(:test).once } }
-    runner = Processor::Runner.new(*observers)
+    runner = Processor::ThreadRunner.new(*observers)
     runner.register_event :test
   end
 
