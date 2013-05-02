@@ -1,3 +1,3 @@
 module Processor
-  VERSION = "0.0.0.initial"
+  VERSION = "0.0.0.beta"
 end
