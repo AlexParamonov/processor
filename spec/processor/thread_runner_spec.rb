@@ -72,9 +72,10 @@ describe Processor::ThreadRunner do
 
       it "should register a processing_error event" do
         event_registered = false
-        events_registrator.should_receive(:register) do |event_name, exception|
+        events_registrator.should_receive(:register) do |event_name, current_processor, exception|
           next if event_name != :processing_error
           event_name.should eq :processing_error
+          current_processor.should eq processor
           exception.should be_a Exception
           event_registered = true
         end.any_number_of_times
@@ -98,7 +99,7 @@ describe Processor::ThreadRunner do
 
       it "should register a processing_error" do
         event_registered = false
-        events_registrator.should_receive(:register) do |event_name, exception|
+        events_registrator.should_receive(:register) do |event_name, processor, exception|
           next if event_name != :processing_error
           event_name.should eq :processing_error
           exception.should be_a RuntimeError

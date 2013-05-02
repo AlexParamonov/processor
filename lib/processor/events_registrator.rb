@@ -1,9 +1,7 @@
 module Processor
   class EventsRegistrator
-    def initialize(processor, observer_sources)
-      @observers = observer_sources.map do |source|
-        source.call(processor)
-      end
+    def initialize(observers)
+      @observers = observers
     end
 
     def register(event, *data)

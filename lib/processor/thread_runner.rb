@@ -2,15 +2,15 @@ require_relative "events_registrator"
 
 module Processor
   class ThreadRunner
-    def initialize(*observer_sources)
-      @observer_sources = observer_sources
+    def initialize(*observers)
+      @observers = observers
     end
 
-    # Observers are recreated on each run.
-    # This method should be thread-safe.
+    # This method is thread-safe. But not observers.
+    # Consider creating new runner for a thread or use thread safe observers
     def run(processor)
-      events = events_registrator(processor)
-      events.register :processing_started
+      events = events_registrator
+      events.register :processing_started, processor
 
       records_ran = 0
       until processor.done?(records = processor.fetch_records)
@@ -38,22 +38,22 @@ module Processor
         end
       end
 
-      events.register :processing_finished
+      events.register :processing_finished, processor
     rescue Exception => exception
-      events.register :processing_error, exception
+      events.register :processing_error, processor, exception
       raise exception
     end
 
     private
-    attr_reader :observer_sources
+    attr_reader :observers
 
     def recursion_preventer(processor)
       counter = yield
       raise Exception, "Processing fall into recursion. Check logs." if counter > (processor.total_records * 1.1).round + 10
     end
 
-    def events_registrator(processor)
-      EventsRegistrator.new processor, observer_sources
+    def events_registrator
+      EventsRegistrator.new observers
     end
   end
 end

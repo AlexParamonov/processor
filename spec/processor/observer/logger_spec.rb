@@ -3,20 +3,30 @@ require 'processor/observer/logger'
 
 describe Processor::Observer::Logger do
   let(:processor) { stub.as_null_object }
+  let(:no_messages) { ::Logger.new("/dev/null") }
+
   subject { Processor::Observer::Logger }
     it "accepts logger builder as parameter" do
       external_logger = mock
-      logger_observer = subject.new processor, logger: -> name { external_logger }
+      logger_observer = subject.new -> name { external_logger }, messenger: no_messages
 
       external_logger.should_receive(:info)
-      logger_observer.send(:logger).info
+      logger_observer.processing_started processor
+    end
+
+    it "accepts logger as parameter" do
+      external_logger = mock
+      logger_observer = subject.new external_logger, messenger: no_messages
+
+      external_logger.should_receive(:info)
+      logger_observer.processing_started processor
     end
 
     it "use ruby Logger if no external logger provided" do
-      logger = subject.new processor
+      logger_observer = subject.new nil, messenger: no_messages
 
       Logger.should_receive(:new).and_return(stub.as_null_object)
-      logger.send(:logger)
+      logger_observer.processing_started processor
     end
 end
 

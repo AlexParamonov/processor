@@ -3,10 +3,13 @@ require 'logger'
 module Processor
   module Observer
     class NullObserver
-      def initialize(processor, options = {})
-        @processor = processor
+      def initialize(options = {})
         @messenger = options.fetch :messenger do
-          ::Logger.new("/dev/null")
+          ::Logger.new(STDOUT).tap do |logger|
+            logger.formatter =  -> _, _, _, msg do
+              "> #{msg}\n"
+            end
+          end
         end
       end
 
@@ -14,7 +17,7 @@ module Processor
       alias_method :update, :send
 
       private
-      attr_reader :processor, :messenger
+      attr_reader :messenger
     end
   end
 end

@@ -4,19 +4,14 @@ require 'logger'
 module Processor
   module Observer
     class Logger < NullObserver
-      def initialize(processor, options = {})
-        super
-
-        @logger = options.fetch :logger do
-          -> processor_name do
-            ::Logger.new(create_log_filename(processor_name)).tap do |logger|
-              logger.level = ::Logger::INFO
-            end
-          end
-        end
+      def initialize(logger = nil, options = {})
+        @logger_source = logger
+        super options
       end
 
-      def processing_started
+      def processing_started(processor)
+        initialize_logger(processor)
+
         message = "Processing of #{processor.name} started."
         logger.info message
         messenger.info message
@@ -25,8 +20,8 @@ module Processor
           Proggress will be saved to the log file. Run
           tail -f #{log_file_name}
           to see log in realtime
-        MESSAGE
-        messenger.info message if use_log_file?
+          MESSAGE
+          messenger.info message if use_log_file?
       end
 
       def before_record_processing(record)
@@ -41,7 +36,7 @@ module Processor
         messenger.debug message
       end
 
-      def processing_finished
+      def processing_finished(processor)
         message = "Processing of #{processor.name} finished."
         logger.info message
         messenger.info message
@@ -54,17 +49,24 @@ module Processor
         messenger.error message
       end
 
-      def processing_error(exception)
+      def processing_error(processor, exception)
         message = "Processing #{processor.name} failed: #{exception}"
         logger.fatal message
         messenger.fatal message
       end
 
       private
-      attr_reader :log_file_name
+      attr_reader :logger, :log_file_name
 
-      def logger
-        @logger.call processor.name
+      def initialize_logger(processor)
+        @logger =
+          if @logger_source.is_a? Proc
+            @logger_source.call processor.name
+          else
+            @logger_source or ::Logger.new(create_log_filename(processor.name)).tap do |logger|
+              logger.level = ::Logger::INFO
+            end
+          end
       end
 
       def create_log_filename(processor_name)
