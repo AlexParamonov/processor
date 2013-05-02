@@ -1,27 +1,35 @@
+require_relative "events_registrator"
+
 module Processor
   class ThreadRunner
-    def initialize(*observers)
-      @observers = observers
+    def initialize(*observer_sources)
+      @observer_sources = observer_sources
     end
 
-    def run
-      register_event :prepare, self
-      register_event :found, total_records
+    # Observers are recreated on each run.
+    # This method should be thread-safe.
+    def run(processor)
+      events = events_registrator(processor)
+      events.register :processing_started
 
-      while have_records?(records = fetch_records_batch)
+      records_ran = 0
+      until processor.done?(records = processor.fetch_records)
         threads = []
         begin
           records.each do |record|
-            recursion_preventer
-            threads << Thread.new(record) do |thread_record|
+            recursion_preventer processor do
+              records_ran += 1
+            end
+
+            threads << Thread.new(processor, record) do |thread_data_processor, thread_record|
               begin
-                register_event :before_proccessing, thread_record
+                events.register :before_record_processing, thread_record
 
-                result = process(thread_record)
+                result = thread_data_processor.process(thread_record)
 
-                register_event :after_proccessing, thread_record, result
+                events.register :after_record_processing, thread_record, result
               rescue RuntimeError => exception
-                register_event :record_processing_error, thread_record, exception
+                events.register :record_processing_error, thread_record, exception
               end
             end
           end
@@ -30,50 +38,22 @@ module Processor
         end
       end
 
-      register_event :finalize, self
+      events.register :processing_finished
     rescue Exception => exception
-      register_event :processing_error, self, exception
+      events.register :processing_error, exception
       raise exception
     end
 
-    def name
-      self.class.name.underscore.tr("/", "_")
-    end
-
-    def message(content, sender = "Observer")
-      puts "\nMessage from #{sender}:\n> #{content}\n"
-    end
-
-    def register_event(method_name, *args)
-      observers.each do |observer|
-        observer.public_send method_name, *args
-      end
-    end
-
-    protected
-    def process(record)
-      raise NotImplementedError
-    end
-
-    def fetch_records_batch
-      raise NotImplementedError
-    end
-
-    def total_records
-      0
-    end
-
     private
-    attr_reader :observers
+    attr_reader :observer_sources
 
-    def have_records?(records_set)
-      records_set.count > 0
+    def recursion_preventer(processor)
+      counter = yield
+      raise Exception, "Processing fall into recursion. Check logs." if counter > (processor.total_records * 1.1).round + 10
     end
 
-    def recursion_preventer
-      @counter ||= 0
-      @counter += 1
-      raise Exception, "Processing fall into recursion. Check logs." if @counter > (total_records * 1.1).round + 10
+    def events_registrator(processor)
+      EventsRegistrator.new processor, observer_sources
     end
   end
 end
