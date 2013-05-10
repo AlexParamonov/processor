@@ -13,12 +13,12 @@ describe "Example" do
   end
 
   it "should use logger and messenger" do
-    migration_runner = Processor::Example::ExampleRunner.new
-    migration_runner.run @migration
+    migration_runner = Processor::Example::ExampleRunner.new @migration
+    migration_runner.run
   end
 
   it "should run without configuration" do
-    runner = Processor::ThreadRunner.new
-    runner.run @migration
+    runner = Processor::ThreadRunner.new @migration
+    runner.run
   end
 end

@@ -7,7 +7,7 @@ module Processor
       extend Forwardable
       def_delegators :@runner, :run
 
-      def initialize
+      def initialize(migration)
         # Logger could be a lambda
         # Where "name" is a processor.name
         # logger = -> name do
@@ -44,6 +44,7 @@ module Processor
         your_custom_observer2 = Observer::NullObserver.new
 
         @runner = ThreadRunner.new(
+          migration,
           stdout_observer,
           your_custom_observer1,
           your_custom_observer2,
