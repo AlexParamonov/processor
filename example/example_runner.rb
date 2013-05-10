@@ -3,7 +3,10 @@ require 'processor/observer/logger'
 
 module Processor
   module Example
-    class ExampleRunner < ThreadRunner
+    class ExampleRunner
+      extend Forwardable
+      def_delegators :@runner, :run
+
       def initialize
         # Logger could be a lambda
         # logger = -> name do
@@ -36,7 +39,7 @@ module Processor
         end
 
         logger_observer = Processor::Observer::Logger.new(logger, messenger: messenger)
-        super logger_observer
+        @runner = ThreadRunner.new(logger_observer)
       end
     end
   end
