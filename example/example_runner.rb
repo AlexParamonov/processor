@@ -38,8 +38,15 @@ module Processor
           logger.level = ::Logger::INFO
         end
 
-        logger_observer = Processor::Observer::Logger.new(logger, messenger: messenger)
-        @runner = ThreadRunner.new(logger_observer)
+        stdout_observer = Processor::Observer::Logger.new(logger, messenger: messenger)
+        your_custom_observer1 = Observer::NullObserver.new
+        your_custom_observer2 = Observer::NullObserver.new
+
+        @runner = ThreadRunner.new(
+          stdout_observer,
+          your_custom_observer1,
+          your_custom_observer2,
+        )
       end
     end
   end
