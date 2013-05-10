@@ -5,8 +5,10 @@ module Processor
     class SolrPagesMigration < DataProcessor
       def done?(records)
         # Optional custom check for migration to be done.
-        # Default is
-        # records.count < 1
+
+        # your custom check
+
+        # use a default check if you like
         super
       end
 
@@ -21,6 +23,11 @@ module Processor
 
       def total_records
         @total_records ||= query(1).total
+      end
+
+      # optional name to use in observers.
+      def name
+        "my_company_users_contact_method_migration"
       end
 
       private

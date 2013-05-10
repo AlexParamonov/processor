@@ -9,6 +9,7 @@ module Processor
 
       def initialize
         # Logger could be a lambda
+        # Where "name" is a processor.name
         # logger = -> name do
         #   ::Logger.new("log/debug_#{name}_daily.log", "daily").tap do |logger|
         #     logger.datetime_format = "%H:%M:%S"
