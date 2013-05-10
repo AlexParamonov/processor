@@ -21,4 +21,24 @@ describe "Example" do
     runner = Processor::ThreadRunner.new @migration
     runner.run
   end
+
+  pending "should run in threads" do
+    processor = Processor.new @migration
+    processor.run :threads
+  end
+
+  pending "should run successive" do
+    processor = Processor.new @migration
+    processor.run :successive
+  end
+
+  pending "should run with own block" do
+    processor = Processor.new @migration
+    processor.run do |records, events, recursion_preventer|
+      records.each do |record|
+        recursion_preventer.call
+        processor.process record
+      end
+    end
+  end
 end
