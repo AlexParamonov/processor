@@ -3,7 +3,10 @@ Processor
 [![Build Status](https://travis-ci.org/AlexParamonov/processor.png?branch=master)](http://travis-ci.org/AlexParamonov/processor)
 [![Gemnasium Build Status](https://gemnasium.com/AlexParamonov/processor.png)](http://gemnasium.com/AlexParamonov/processor)  
 
-Universal processor for data migration
+Processor could execute any DataProcessor you specify and log entire process using any number of loggers you need.  
+You may add own observers for monitoring background tasks on even send an email to bussiness with generated report.  
+Processor provide customisation for almost every part of it.  
+
 
 Contents
 ---------
@@ -48,7 +51,8 @@ Usage
 thread = Processor::Thread.new data_processor
 thread.run_successive
 ```
-See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and `example` directory for other usage examples.  
+See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and
+`example` directory for other usage examples.  
 Below are specs for most valuable parts of the gem.
 
 ``` rspec
@@ -70,6 +74,42 @@ Processor::Observer::Logger
   accepts logger as parameter
   use ruby Logger if no external logger provided
 ```
+
+It is recomended to wrap Processor::Thread in your classes like:
+
+```
+WeeklyReport
+TaxonomyMigration
+UserDataImport
+```
+to hide configuration of observers or use your own API to run
+migrations:
+
+```
+weekly_report.create_and_deliver
+user_data_import.import_from_csv(file)
+etc.
+```
+
+Sure, it is possible to use it raw, but please dont fear to add a
+wrapper class for it:
+
+```
+csv_data_processor = CsvDataProcessor.new file
+stdout_notifier = Processor::Observer::Logger.new(Logger.new(STDOUT))
+logger_observer = Processor::Observer::Logger.new
+Processor::Runner.new(
+  csv_data_processor,
+  stdout_notifier,
+  logger_observer,
+  email_notification_observer
+)
+```
+
+### Observers
+Observers should respond to `update` method but if you inherit from
+`Processor::Observers::NullObserver` you'll get a bunch of methods to
+use. See `Processor::Observers::Logger` for example.
 
 Compatibility
 -------------

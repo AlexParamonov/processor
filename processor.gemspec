@@ -8,8 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Processor::VERSION
   gem.authors       = ["Alexander Paramonov"]
   gem.email         = ["alexander.n.paramonov@gmail.com"]
-  gem.summary       = %q{Process records one by one}
-  gem.description   = %q{Universal processor for data migration}
+  gem.summary       = %q{Universal processor for data migration and reports generation.}
+  gem.description   = %q{Processor could execute any DataProcessor you specify and log entire process.
+  You may add own observers for monitoring background tasks on even send email to bussiness with generated report.}
   gem.homepage      = "http://github.com/AlexParamonov/processor"
   gem.license       = "MIT"
 
