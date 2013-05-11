@@ -119,6 +119,7 @@ tested with Ruby
 * jruby-19mode
 * rbx-19mode
 * ruby-head
+* jruby-head
 
 see [build history](http://travis-ci.org/#!/AlexParamonov/processor/builds)
 
