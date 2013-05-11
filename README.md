@@ -98,12 +98,12 @@ wrapper class for it:
 csv_data_processor = CsvDataProcessor.new file
 stdout_notifier = Processor::Observer::Logger.new(Logger.new(STDOUT))
 logger_observer = Processor::Observer::Logger.new
-Processor::Runner.new(
+Processor::Thread.new(
   csv_data_processor,
   stdout_notifier,
   logger_observer,
   email_notification_observer
-)
+).run_in_threads
 ```
 
 ### Observers
