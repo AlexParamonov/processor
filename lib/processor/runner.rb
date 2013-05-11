@@ -2,15 +2,15 @@ require_relative "events_registrator"
 
 module Processor
   class Runner
-    def initialize(processor, *observers)
+    def initialize(processor, events_registrator)
       @processor = processor
-      @events = EventsRegistrator.new observers
+      @events = events_registrator
     end
 
-    def run
+    def run(records_processor)
       events.register :processing_started, processor
       until processor.done?(records = processor.fetch_records)
-        yield records, events, method(:recursion_preventer) if block_given?
+        records_processor.call records, processor, events, method(:recursion_preventer)
       end
 
       events.register :processing_finished, processor
