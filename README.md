@@ -36,19 +36,20 @@ gem install processor
 
 Requirements
 ------------
-Ruby 1.9
-rspec2 for testing
+1. Ruby 1.9
+1. Rspec2 for testing
 
 Usage
 ------------
-1. Implement a DataProcessor. See Processor::Example::Migration, Processor::Example::SolrMigration, Processor::Example::SolrPagesMigration
-1. Run your DataProcessor:
+1. Implement a `DataProcessor`. See `Processor::Example::Migration`, `Processor::Example::SolrMigration`, `Processor::Example::SolrPagesMigration`
+1. Run your `DataProcessor`:
 
 ``` ruby
 thread = Processor::Thread.new data_processor
 thread.run_successive
 ```
-See spec/processor/thread_spec.rb and spec/example_spec.rb for other usage examples:
+See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and `example` directory for other usage examples.  
+Below are specs for most valuable parts of the gem.
 
 ``` rspec
 Processor::Thread
