@@ -33,7 +33,7 @@ module Processor
     end
 
     def max_records_to_process
-      (processor.total_records * 1.1).round + 10
+      @max_records_to_process ||= (processor.total_records * 1.1).round + 10
     end
   end
 end
