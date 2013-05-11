@@ -40,18 +40,18 @@ module Processor
           logger.formatter =  -> _, _, _, msg do
             "message\t> #{msg}\n"
           end
-          logger.level = ::Logger::INFO
+          logger.level = ::Logger::DEBUG
         end
 
-        stdout_observer1 = Processor::Observer::Logger.new(logger1, messenger: messenger)
-        stdout_observer2 = Processor::Observer::Logger.new(logger2, messenger: Logger.new("/dev/null"))
+        stdout_logger_debug = Processor::Observer::Logger.new(logger1, messenger: messenger)
+        stdout_logger_info = Processor::Observer::Logger.new(logger2)
         your_custom_observer1 = Observer::NullObserver.new
         your_custom_observer2 = Observer::NullObserver.new
 
         super(
           migration,
-          stdout_observer1,
-          stdout_observer2,
+          stdout_logger_debug,
+          stdout_logger_info,
           your_custom_observer1,
           your_custom_observer2,
         )

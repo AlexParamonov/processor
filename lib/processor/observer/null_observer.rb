@@ -9,6 +9,7 @@ module Processor
             logger.formatter =  -> _, _, _, msg do
               "> #{msg}\n"
             end
+            logger.level = ::Logger::INFO
           end
         end
       end

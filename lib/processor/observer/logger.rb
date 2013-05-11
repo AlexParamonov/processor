@@ -11,10 +11,7 @@ module Processor
 
       def processing_started(processor)
         initialize_logger(processor)
-
-        message = "Processing of #{processor.name} started."
-        logger.info message
-        messenger.info message
+        logger.info "Processing of #{processor.name} started."
 
         message = <<-MESSAGE.gsub(/^\s+/, '')
           Proggress will be saved to the log file. Run
@@ -25,34 +22,24 @@ module Processor
       end
 
       def before_record_processing(record)
-        message = "Record #{id_for record} is going to be processed"
-        logger.debug message
-        messenger.debug message
+        logger.debug "Record #{id_for record} is going to be processed"
       end
 
       def after_record_processing(record, result)
-        message = "Successfully processed #{id_for record}: #{result}"
-        logger.info message
-        messenger.debug message
+        logger.info "Successfully processed #{id_for record}: #{result}"
       end
 
       def processing_finished(processor)
-        message = "Processing of #{processor.name} finished."
-        logger.info message
-        messenger.info message
+        logger.info "Processing of #{processor.name} finished."
         messenger.info "Log file saved to #{log_file_name}" if use_log_file?
       end
 
       def record_processing_error(record, exception)
-        message = "Error processing #{id_for record}: #{exception}"
-        logger.error message
-        messenger.error message
+        logger.error "Error processing #{id_for record}: #{exception}"
       end
 
       def processing_error(processor, exception)
-        message = "Processing #{processor.name} failed: #{exception}"
-        logger.fatal message
-        messenger.fatal message
+        logger.fatal "Processing #{processor.name} failed: #{exception}"
       end
 
       private
@@ -67,6 +54,7 @@ module Processor
               logger.level = ::Logger::INFO
             end
           end
+        messenger.debug "Observer initialized with logger #{@logger}"
       end
 
       def create_log_filename(processor_name)
