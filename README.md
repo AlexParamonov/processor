@@ -8,9 +8,10 @@ Universal processor for data migration
 Contents
 ---------
 1. Installation
-1. Contributing
 1. Requirements
+1. Usage
 1. Compatibility
+1. Contributing
 1. Copyright
 
 Installation
@@ -35,9 +36,39 @@ gem install processor
 
 Requirements
 ------------
-none
-
+Ruby 1.9
 rspec2 for testing
+
+Usage
+------------
+1. Implement a DataProcessor. See Processor::Example::Migration, Processor::Example::SolrMigration, Processor::Example::SolrPagesMigration
+1. Run your DataProcessor:
+
+``` ruby
+thread = Processor::Thread.new data_processor
+thread.run_successive
+```
+See spec/processor/thread_spec.rb and spec/example_spec.rb for other usage examples:
+
+``` rspec
+Processor::Thread
+  should run a migration using provided block
+  should run a migration successive
+  should run a migration in threads
+
+Processor::DataProcessor
+  should have a name equals to underscored class name
+  should be done when there are 0 records to process
+  should respond to done?
+  should respond to fetch_records
+  should respond to total_records
+  should respond to process
+
+Processor::Observer::Logger
+  accepts logger builder as parameter
+  accepts logger as parameter
+  use ruby Logger if no external logger provided
+```
 
 Compatibility
 -------------
