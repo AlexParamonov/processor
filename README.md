@@ -44,10 +44,13 @@ Requirements
 
 Usage
 ------------
-1. Implement a `DataProcessor`. See `Processor::Example::Migration` and `processor/data` directory
+1. Implement a `DataProcessor`. See `Processor::Example::Migration`
+and `processor/data` directory. CSV and Solr data processors are usabe
+but not yet finished and tested.
 1. Run your `DataProcessor`:
 
 ``` ruby
+data_processor = UserLocationMigration.new
 thread = Processor::Thread.new data_processor
 thread.run_successive
 ```
@@ -75,7 +78,7 @@ Sure, it is possible to use it raw, but please dont fear to add a
 wrapper class for it:
 
 ```
-csv_data_processor = CsvDataProcessor.new file
+csv_data_processor = Processor::Data::CsvProcessor.new file
 stdout_notifier = Processor::Observer::Logger.new(Logger.new(STDOUT))
 logger_observer = Processor::Observer::Logger.new
 Processor::Thread.new(
@@ -83,7 +86,7 @@ Processor::Thread.new(
   stdout_notifier,
   logger_observer,
   email_notification_observer
-).run_in_threads
+).run_in_threads 5
 ```
 
 ### Observers
