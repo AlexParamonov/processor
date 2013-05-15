@@ -3,9 +3,13 @@ require_relative 'batch_processor'
 module Processor
   module Data
     class CsvProcessor < BatchProcessor
-      def initialize(file, separator = ";")
+      def initialize(file, csv_options = {})
         @file = file
         @separator = separator
+        @csv_options = {
+          col_sep: ";",
+          headers: true,
+        }.merge csv_options
       end
 
       def process(row)
@@ -14,7 +18,7 @@ module Processor
 
       def records
         Enumerator.new do |result|
-          ::CSV.foreach(file, :headers => true, :col_sep => separator) do |record|
+          ::CSV.foreach(file, csv_options) do |record|
             result << record
           end
         end
@@ -25,7 +29,7 @@ module Processor
       end
 
       private
-      attr_reader :file, :separator
+      attr_reader :file, :separator, :csv_options
 
       def fetch_field(field_name, row)
         row[field_name].to_s.strip
