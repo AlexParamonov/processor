@@ -4,8 +4,7 @@ require "processor/batch_processor"
 
 describe Processor::BatchProcessor do
   it "should create and process records by batch" do
-    processor = Processor::BatchProcessor.new
-    processor.stub(batch_size: 2)
+    processor = Processor::BatchProcessor.new 2
 
     watcher = mock
     5.times do

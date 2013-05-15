@@ -2,10 +2,14 @@ require_relative 'null_processor'
 
 module Processor
   class BatchProcessor < NullProcessor
+    def initialize(batch_size = 10)
+      @batch_size = batch_size
+    end
+
     def records
       Enumerator.new do |result|
-        query.each_slice(batch_size) do |records|
-          records.each do |record|
+        loop do
+          fetch_batch.each do |record|
             result << record
           end
         end
@@ -13,7 +17,12 @@ module Processor
     end
 
     def total_records
-      query.count
+      @total_records ||= query.count
+    end
+
+    def fetch_batch
+      @fetcher ||= query.each_slice(batch_size)
+      @fetcher.next
     end
 
     def query
@@ -21,8 +30,6 @@ module Processor
     end
 
     private
-    def batch_size
-      10
-    end
+    attr_reader :batch_size
   end
 end
