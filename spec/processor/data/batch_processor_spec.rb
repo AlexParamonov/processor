@@ -1,10 +1,10 @@
 require "spec_helper_lite"
 
-require "processor/batch_processor"
+require "processor/data/batch_processor"
 
-describe Processor::BatchProcessor do
+describe Processor::Data::BatchProcessor do
   it "should create and process records by batch" do
-    processor = Processor::BatchProcessor.new 2
+    processor = Processor::Data::BatchProcessor.new 2
 
     watcher = mock
     5.times do

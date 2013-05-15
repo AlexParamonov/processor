@@ -3,7 +3,7 @@ Processor
 [![Build Status](https://travis-ci.org/AlexParamonov/processor.png?branch=master)](http://travis-ci.org/AlexParamonov/processor)
 [![Gemnasium Build Status](https://gemnasium.com/AlexParamonov/processor.png)](http://gemnasium.com/AlexParamonov/processor)  
 
-Processor could execute any DataProcessor you specify and log entire process using any number of loggers you need.  
+Processor could execute any `DataProcessor` you specify and log entire process using any number of loggers you need.  
 You may add own observers for monitoring background tasks on even send an email to bussiness with generated report.  
 Processor provide customisation for almost every part of it.  
 
@@ -44,7 +44,7 @@ Requirements
 
 Usage
 ------------
-1. Implement a `DataProcessor`. See `Processor::Example::Migration`, `Processor::Example::SolrMigration`, `Processor::Example::SolrPagesMigration`
+1. Implement a `DataProcessor`. See `Processor::Example::Migration` and `processor/data` directory
 1. Run your `DataProcessor`:
 
 ``` ruby
@@ -53,27 +53,7 @@ thread.run_successive
 ```
 See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and
 `example` directory for other usage examples.  
-Below are specs for most valuable parts of the gem.
 
-``` rspec
-Processor::Thread
-  should run a migration using provided block
-  should run a migration successive
-  should run a migration in threads
-
-Processor::DataProcessor
-  should have a name equals to underscored class name
-  should be done when there are 0 records to process
-  should respond to done?
-  should respond to fetch_records
-  should respond to total_records
-  should respond to process
-
-Processor::Observer::Logger
-  accepts logger builder as parameter
-  accepts logger as parameter
-  use ruby Logger if no external logger provided
-```
 
 It is recomended to wrap Processor::Thread in your classes like:
 

@@ -7,11 +7,10 @@ module Processor
       @events = events_registrator
     end
 
-    def run(records_processor)
+    def run(process_runner)
       events.register :processing_started, processor
-      until processor.done?(records = processor.fetch_records)
-        records_processor.call records, processor, events, method(:recursion_preventer)
-      end
+
+      process_runner.call processor, events, method(:recursion_preventer)
 
       events.register :processing_finished, processor
     rescue Exception => exception

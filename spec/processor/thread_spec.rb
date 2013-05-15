@@ -13,8 +13,8 @@ describe Processor::Thread do
 
   it "should run a migration using provided block" do
     thread = Processor::Thread.new @migration
-    thread.run_as do |records, processor, *|
-      records.each do |record|
+    thread.run_as do |processor, *|
+      processor.records.each do |record|
         processor.process record
       end
     end
@@ -30,7 +30,7 @@ describe Processor::Thread do
     thread.run_in_threads
   end
 
-  pending "should run a migration in specifien number of threads" do
+  it "should run a migration in specifien number of threads" do
     thread = Processor::Thread.new @migration
     thread.run_in_threads 3
   end

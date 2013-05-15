@@ -1,6 +1,6 @@
 require 'processor/runner'
-require 'processor/records_processor/successive'
-require 'processor/records_processor/threads'
+require 'processor/process_runner/successive'
+require 'processor/process_runner/threads'
 
 module Processor
   class Thread
@@ -8,16 +8,16 @@ module Processor
       @runner = Runner.new data_processor, EventsRegistrator.new(observers)
     end
 
-    def run_as(&records_processor)
-      runner.run records_processor
+    def run_as(&process_runner)
+      runner.run process_runner
     end
 
     def run_successive
-      runner.run RecordsProcessor::Successive.new
+      runner.run ProcessRunner::Successive.new
     end
 
-    def run_in_threads
-      runner.run RecordsProcessor::Threads.new
+    def run_in_threads(number_of_threads = 2)
+      runner.run ProcessRunner::Threads.new number_of_threads
     end
 
     private
