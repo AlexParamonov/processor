@@ -99,10 +99,8 @@ Compatibility
 tested with Ruby
 
 * 1.9.3
-* jruby-19mode
 * rbx-19mode
 * ruby-head
-* jruby-head
 
 see [build history](http://travis-ci.org/#!/AlexParamonov/processor/builds)
 
