@@ -26,7 +26,7 @@ module Processor
       end
 
       def after_record_processing(record, result)
-        logger.info "Successfully processed #{id_for record}: #{result}"
+        logger.info "Processed #{id_for record}: #{result}"
       end
 
       def processing_finished(processor)
@@ -39,7 +39,7 @@ module Processor
       end
 
       def processing_error(processor, exception)
-        logger.fatal "Processing #{processor.name} failed: #{exception}"
+        logger.fatal "Processing #{processor.name} FAILED: #{exception.backtrace}"
       end
 
       private
@@ -79,7 +79,7 @@ module Processor
           return record[method.to_s] if record.key? method.to_s
         end if record.respond_to?(:key?) && record.respond_to?(:[])
 
-        record.to_s
+        record.to_s.strip
       end
     end
   end
