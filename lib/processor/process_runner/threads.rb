@@ -21,7 +21,7 @@ module Processor
                 result = thread_data_processor.process(thread_record)
 
                 events.register :after_record_processing, thread_record, result
-              rescue RuntimeError => exception
+              rescue StandardError => exception
                 events.register :record_processing_error, thread_record, exception
               end
             end

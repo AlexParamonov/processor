@@ -17,9 +17,9 @@ shared_examples_for "a records processor" do
   end
 
   describe "exception handling" do
-    describe "processing a record raised RuntimeError" do
+    describe "processing a record raised StandardError" do
       it "should continue processing" do
-        processor.should_receive(:process).twice.and_raise(RuntimeError)
+        processor.should_receive(:process).twice.and_raise(StandardError)
         expect { process_runner.call processor, no_events, no_recursion_preventer }.to_not raise_error
       end
 
@@ -30,11 +30,11 @@ shared_examples_for "a records processor" do
         events_registrator.should_receive(:register) do |event_name, failed_record, exception|
           next if event_name != :record_processing_error
           event_name.should eq :record_processing_error
-          exception.should be_a RuntimeError
+          exception.should be_a StandardError
           event.trigger
         end.any_number_of_times
 
-        processor.stub(:process).and_raise(RuntimeError)
+        processor.stub(:process).and_raise(StandardError)
 
         process_runner.call processor, events_registrator, no_recursion_preventer rescue nil
       end
