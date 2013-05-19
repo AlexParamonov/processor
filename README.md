@@ -13,6 +13,10 @@ Contents
 1. Installation
 1. Requirements
 1. Usage
+    1. Data processors 
+    1. Run modes 
+    1. Processor Thread
+    1. Observers
 1. Compatibility
 1. Contributing
 1. Copyright
@@ -20,19 +24,16 @@ Contents
 Installation
 ------------
 Add this line to your application's Gemfile:
-
 ``` ruby
 gem 'processor'
 ```
 
 And then execute:
-
 ``` sh
 bundle
 ```
 
 Or install it yourself as:
-
 ``` sh
 gem install processor
 ```
@@ -44,29 +45,117 @@ Requirements
 
 Usage
 ------------
-1. Implement a `DataProcessor`. See `Processor::Example::Migration`
-and `processor/data` directory. CSV and Solr data processors are usabe
-but not yet finished and tested.
-1. Run your `DataProcessor`:
 
+### Data processors 
+Actual processing is done by a Data Processor, provided by end user.  
+This processor should implement in general 2 methods:
+
+1. `process(record)`
+1. `records`
+
+But it is recomended to implement a `name` method also, because it is required by several observers. 
+Inherit your Data Processor from NullProcessor to get default behavior out of the box.  
+See `Processor::Example::Migration` for example (`example/migration.rb`).
+
+There are several predefined data processors you can reuse:
+
+#### ArrayProcessor
+The simplest one: `process` and `records` methods should be implemented.
+
+#### BatchProcessor
+Allows to fetch records by batches of defined size.  
+It is based on `query` method that suppose to run a query method on database.  
+Recomended to override `fetch_batch` method to get real reason to use batch processing. 
+`fetch_batch` could be `query.first(10)` or `query.page(next_page)`. 
+See `data/solr_pages_processor.rb` and `data/solr_processor.rb` for example.
+
+#### Other
+see `data/csv_processor.rb` for running migration from CSV files.
+
+
+### Run modes 
+Currently 2 run modes are supported:
+
+#### Successive
+It runs `process` one by one for each found record returned by `records` method.  
+Recomended to call it using a Processor::Thread :  
+`Processor::Thread.new(migration).run_successive`
+
+#### Threads
+It runs `process` for each found record returned by `records` method not waiting for previous `process` to finish.  
+Possible to specify number of threads used by passing a number to constructor:
+`Processor::ProcessRunner::Threads.new 5` will run in 5 threads.  
+Recomended to call it using a Processor::Thread :  
+`Processor::Thread.new(migration).run_in_threads 5`
+
+
+### Observers
+Processor support unlimited number of observers, watching processing.  
+Thay could monitor running migrations and output to logs, console or file usefull information.
+Or thay can show a progress bar to your console.
+Or pack a generated report to archive and send by email to bussiness on 
+success or notify developers on failure.  
+
+
+This observers should respond to `update` method. But if you inherit from
+`Processor::Observers::NullObserver` you'll get a bunch of methods, 
+such as before_ and after_ processing, error handling methods to
+use. See `Processor::Observers::Logger` for example.
+
+Read below section Processor Thread to see how to use observers in runner.
+
+
+### Processor Thread
+`Processor::Thread` is a Facade pattern. 
+It simplifies access to all Processor classes and provide __stable__ interface.  
+Creating a new Thread:  
+`Processor::Thread.new data_processor`  
+
+You may provide optional observers:  
+`Processor::Thread.new data_processor, observer1, observer2, ...`
+
+Instance have a `run_as` method that accepts a block:  
+``` ruby
+thread = Processor::Thread.new @migration
+thread.run_as do |processor, *|
+  processor.records.each do |record|
+    processor.process record
+  end
+end
+```
+
+Block could accept next arguments:   
+`processor`, `events`, `recursion_preventer` method. Last one could be called to prevent recurtion:
+```
+recursion_preventer.call
+```
+
+Instance have a `run_successive` method: 
 ``` ruby
 data_processor = UserLocationMigration.new
 thread = Processor::Thread.new data_processor
 thread.run_successive
 ```
+
+And `run_in_threads` method:
+``` ruby
+data_processor = UserCsvImport.new csv_file
+thread = Processor::Thread.new data_processor
+thread.run_in_threads 10
+```
+
 See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and
 `example` directory for other usage examples.  
 
 
-It is recomended to wrap Processor::Thread in your classes like:
+It is recomended to wrap Processor::Thread by classes named like:
 
 ```
 WeeklyReport
 TaxonomyMigration
 UserDataImport
 ```
-to hide configuration of observers or use your own API to run
-migrations:
+The point is to hide configuration of observers and use (if you wish) your own API to run reports or migrations:
 
 ```
 weekly_report.create_and_deliver
@@ -74,8 +163,8 @@ user_data_import.import_from_csv(file)
 etc.
 ```
 
-Sure, it is possible to use it raw, but please dont fear to add a
-wrapper class for it:
+It is possible to use it raw, but please dont fear to add a
+wrapper class like `CsvUserImport` for this:
 
 ```
 csv_data_processor = Processor::Data::CsvProcessor.new file
@@ -89,10 +178,6 @@ Processor::Thread.new(
 ).run_in_threads 5
 ```
 
-### Observers
-Observers should respond to `update` method but if you inherit from
-`Processor::Observers::NullObserver` you'll get a bunch of methods to
-use. See `Processor::Observers::Logger` for example.
 
 Compatibility
 -------------
