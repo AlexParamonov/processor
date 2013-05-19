@@ -1,8 +1,8 @@
-require_relative 'batch_processor'
+require_relative 'null_processor'
 
 module Processor
   module Data
-    class CsvProcessor < BatchProcessor
+    class CsvProcessor < NullProcessor
       def initialize(file, csv_options = {})
         @file = file
         @separator = separator
