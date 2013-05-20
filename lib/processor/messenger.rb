@@ -25,10 +25,10 @@ module Processor
     private
     def format_message(severity, datetime, progname, message)
       lines = message.split("\n").map do |line|
-        "> %s\n" % line.gsub(/^\s+/, '')
+        "> %s" % line.gsub(/^\s+/, '')
       end.join("\n")
 
-      "#{severity} message on #{datetime}:\n#{lines}\n"
+      "\n#{severity} message on #{datetime}:\n#{lines}\n\n"
     end
   end
 end
