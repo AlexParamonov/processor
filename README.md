@@ -134,7 +134,7 @@ end
 
 Block could accept next arguments:   
 `processor`, `events`, `recursion_preventer` method. Last one could be called to prevent recurtion:
-```
+``` ruby
 recursion_preventer.call
 ```
 
@@ -158,14 +158,14 @@ See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and
 
 It is recomended to wrap Processor::Thread by classes named like:
 
-```
+``` ruby
 WeeklyReport
 TaxonomyMigration
 UserDataImport
 ```
 The point is to hide configuration of observers and use (if you wish) your own API to run reports or migrations:
 
-```
+``` ruby
 weekly_report.create_and_deliver
 user_data_import.import_from_csv(file)
 etc.
@@ -174,7 +174,7 @@ etc.
 It is possible to use it raw, but please dont fear to add a
 wrapper class like `CsvUserImport` for this:
 
-```
+``` ruby
 csv_data_processor = Processor::Data::CsvProcessor.new file
 stdout_notifier = Processor::Observer::Logger.new(Logger.new(STDOUT))
 logger_observer = Processor::Observer::Logger.new
