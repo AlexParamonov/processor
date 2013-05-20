@@ -13,12 +13,13 @@ module Processor
         initialize_logger(processor)
         logger.info "Processing of #{processor.name} started."
 
-        message = <<-MESSAGE.gsub(/^\s+/, '')
+        message = <<-MESSAGE
           Proggress will be saved to the log file. Run
           tail -f #{log_file_name}
           to see log in realtime
-          MESSAGE
-          messenger.info message if use_log_file?
+        MESSAGE
+
+        messenger.info message if use_log_file?
       end
 
       def before_record_processing(record)
@@ -58,7 +59,12 @@ module Processor
       end
 
       def create_log_filename(processor_name)
-        @log_file_name = "log/#{processor_name}_on_#{current_time_string}.log"
+        FileUtils.mkdir log_directory unless File.directory? log_directory
+        @log_file_name = "#{log_directory}/#{processor_name}_on_#{current_time_string}.log"
+      end
+
+      def log_directory
+        "log"
       end
 
       def use_log_file?
