@@ -1,17 +1,11 @@
 require 'logger'
+require 'processor/messenger'
 
 module Processor
   module Observer
     class NullObserver
       def initialize(options = {})
-        @messenger = options.fetch :messenger do
-          ::Logger.new(STDOUT).tap do |logger|
-            logger.formatter =  -> _, _, _, msg do
-              "> #{msg}\n"
-            end
-            logger.level = ::Logger::INFO
-          end
-        end
+        @messenger = options.fetch :messenger, Processor::Messenger.new(:info)
       end
 
       def method_missing(*); end

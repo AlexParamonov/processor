@@ -13,7 +13,7 @@ module Processor
         # logger could be an instance of Ruby Logger
         logger1 = ::Logger.new(STDOUT).tap do |logger|
           logger.formatter =  -> _, _, _, msg do
-            "debug\t< #{msg}\n"
+            "log < debug logger: #{msg}\n"
           end
           logger.level = ::Logger::DEBUG
         end
@@ -23,7 +23,7 @@ module Processor
         logger2 = -> name do
           ::Logger.new(STDOUT).tap do |logger|
             logger.formatter =  -> _, _, _, msg do
-              "info\t< #{msg}\n"
+              "log <  info logger: #{msg}\n"
             end
             logger.level = ::Logger::INFO
           end
@@ -36,11 +36,9 @@ module Processor
         # in this case logger will be initialized as Ruby Logger and write to log/name_of_processor_time_stamp.log
 
         # You may customize a messenger:
-        messenger = ::Logger.new(STDOUT).tap do |logger|
-          logger.formatter =  -> _, _, _, msg do
-            "message\t> #{msg}\n"
-          end
-          logger.level = ::Logger::DEBUG
+        messenger = Processor::Messenger.new :debug
+        messenger.formatter = -> _, _, _, msg do
+          "message\t> #{msg}\n"
         end
 
         stdout_logger_debug = Processor::Observer::Logger.new(logger1, messenger: messenger)
