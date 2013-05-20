@@ -5,6 +5,7 @@
 Gemfile.lock
 /pkg
 /tmp
+/log
 /tags
 
 ## generic files to ignore
