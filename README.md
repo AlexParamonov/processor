@@ -78,15 +78,19 @@ Currently 2 run modes are supported:
 
 #### Successive
 It runs `process` one by one for each found record returned by `records` method.  
-Recomended to call it using a Processor::Thread :  
-`Processor::Thread.new(migration).run_successive`
+Recomended to call it using a Processor::Thread :
+``` ruby
+Processor::Thread.new(migration).run_successive
+```
 
 #### Threads
 It runs `process` for each found record returned by `records` method not waiting for previous `process` to finish.  
 Possible to specify number of threads used by passing a number to constructor:
 `Processor::ProcessRunner::Threads.new 5` will run in 5 threads.  
-Recomended to call it using a Processor::Thread :  
-`Processor::Thread.new(migration).run_in_threads 5`
+Recomended to call it using a Processor::Thread :
+``` ruby
+Processor::Thread.new(migration).run_in_threads 5
+```
 
 
 ### Observers
@@ -108,11 +112,15 @@ Read below section Processor Thread to see how to use observers in runner.
 ### Processor Thread
 `Processor::Thread` is a Facade pattern. 
 It simplifies access to all Processor classes and provide __stable__ interface.  
-Creating a new Thread:  
-`Processor::Thread.new data_processor`  
+Creating a new Thread:
+``` ruby
+Processor::Thread.new data_processor
+```
 
-You may provide optional observers:  
-`Processor::Thread.new data_processor, observer1, observer2, ...`
+You may provide optional observers:
+``` ruby
+Processor::Thread.new data_processor, observer1, observer2, ...
+```
 
 Instance have a `run_as` method that accepts a block:  
 ``` ruby
