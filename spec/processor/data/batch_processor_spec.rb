@@ -16,8 +16,7 @@ describe Processor::Data::BatchProcessor do
 
     query = Enumerator.new do |y|
       a = 1
-      loop do
-        break if a > 10
+      until a > 10
         watcher.created
         y << a
         a += 1
@@ -34,5 +33,10 @@ describe Processor::Data::BatchProcessor do
     query = 1..5
     subject.stub(query: query)
     subject.total_records.should eq 5
+  end
+
+  it "should stop iteration if fetch_records returned empty result set" do
+    subject.stub(fetch_batch: [])
+    subject.records.to_a.should eq []
   end
 end

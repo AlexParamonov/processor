@@ -10,7 +10,9 @@ module Processor
       def records
         Enumerator.new do |result|
           loop do
-            fetch_batch.each do |record|
+            batch = fetch_batch
+            break if batch.count < 1
+            batch.each do |record|
               result << record
             end
           end
