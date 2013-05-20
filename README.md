@@ -178,6 +178,10 @@ Processor::Thread.new(
 ).run_in_threads 5
 ```
 
+More documentation could be found by running
+``` sh
+rspec
+```
 
 Compatibility
 -------------
