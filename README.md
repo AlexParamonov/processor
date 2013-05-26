@@ -163,12 +163,7 @@ thread.run_as do |processor, *|
 end
 ```
 
-Block could accept next arguments: `processor`, `events`,
-`recursion_preventer` method. Last one could be called to prevent
-recursion:
-``` ruby
-recursion_preventer.call
-```
+Block could accept `processor` and `events` arguments.
 
 Instance have a `run_successive` method: 
 ``` ruby
