@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["alexander.n.paramonov@gmail.com"]
   gem.summary       = %q{Universal processor for data migration and reports generation.}
   gem.description   = %q{Processor could execute any DataProcessor you specify and log entire process.
-  You may add own observers for monitoring background tasks on even send email to bussiness with generated report.}
+  You may add own observers for monitoring background tasks on even send an email to business with generated report.}
   gem.homepage      = "http://github.com/AlexParamonov/processor"
   gem.license       = "MIT"
 

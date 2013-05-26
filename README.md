@@ -7,7 +7,7 @@ Processor could execute any `DataProcessor` you specify and log entire
 process using any number of loggers you need.
 
 You may add own observers for monitoring background tasks on even send
-an email to bussiness with generated report.
+an email to business with generated report.
 
 Processor provide customisation for almost every part of it.  
 
@@ -64,8 +64,8 @@ There are additional methods you could implement for Data Processor:
 `start`, `finish`, `error(exception)` and `finalize`.
 
 This methods are called if Data Processor started and successfully
-finished. `error` method is called if unprocessed errors happend
-during processig. `finalize` is called in any case allowing you to
+finished. `error` method is called if unprocessed errors happened
+during processing. `finalize` is called in any case allowing you to
 gracefully finalize a processing.
 
 See `Processor::Example::Migration` for example (`example/migration.rb`).
@@ -83,7 +83,7 @@ Allows to fetch records by batches of defined size.
 It is based on `query` method that suppose to run a query method on
 database.
 
-Recomended to override `fetch_batch` method to get real reason to
+Recommended to override `fetch_batch` method to get real reason to
 use batch processing. `fetch_batch` could be `query.first(10)` or
 `query.page(next_page)`. See `data/solr_pages_processor.rb` and
 `data/solr_processor.rb` for example.
@@ -101,7 +101,7 @@ Currently 2 run modes are supported:
 It runs `process` one by one for each found record returned by
 `records` method.
 
-Recomended to call it using a `Processor::Thread`:
+Recommended to call it using a `Processor::Thread`:
 ``` ruby
 Processor::Thread.new(migration).run_successive
 ```
@@ -116,7 +116,7 @@ constructor:
 Processor::ProcessRunner::Threads.new 5
 ```
 
-Recomended to call it using a Processor::Thread :
+Recommended to call it using a Processor::Thread :
 ``` ruby
 Processor::Thread.new(migration).run_in_threads 5
 ```
@@ -125,10 +125,10 @@ Processor::Thread.new(migration).run_in_threads 5
 ### Observers
 Processor support unlimited number of observers, watching processing.
 
-Thay could monitor running migrations and output to logs, console or
-file usefull information. Or thay can show a progress bar to your
+They could monitor running migrations and output to logs, console or
+file useful information. Or they can show a progress bar to your
 console. Or pack a generated report to archive and send by email to
-bussiness on success or notify developers on failure.
+business on success or notify developers on failure.
 
 
 This observers should respond to `update` method. But if you inherit
@@ -165,7 +165,7 @@ end
 
 Block could accept next arguments: `processor`, `events`,
 `recursion_preventer` method. Last one could be called to prevent
-recurtion:
+recursion:
 ``` ruby
 recursion_preventer.call
 ```
@@ -187,7 +187,7 @@ thread.run_in_threads 10
 See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and
 `example` directory for other usage examples.
 
-It is recomended to wrap Processor::Thread by classes named like:
+It is recommended to wrap Processor::Thread by classes named like:
 ``` ruby
 WeeklyReport
 TaxonomyMigration
@@ -202,7 +202,7 @@ user_data_import.import_from_csv(file)
 etc.
 ```
 
-It is possible to use it raw, but please dont fear to add a wrapper
+It is possible to use it raw, but please don't fear to add a wrapper
 class like `CsvUserImport` for this:
 ``` ruby
 csv_data_processor = Processor::Data::CsvProcessor.new file
@@ -229,7 +229,7 @@ tested with Ruby
 * rbx-19mode
 * ruby-head
 
-see [build history](http://travis-ci.org/#!/AlexParamonov/processor/builds)
+See [build history](http://travis-ci.org/#!/AlexParamonov/processor/builds)
 
 Contributing
 -------------
