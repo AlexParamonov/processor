@@ -13,7 +13,7 @@ module Processor
       end
 
       def process(row)
-        super
+        raise NotImplementedError
       end
 
       def records

@@ -7,7 +7,7 @@ module Processor
       def error(exception); end
 
       def process(record)
-        stats.record_processed
+        # do nothing
       end
 
       def records
