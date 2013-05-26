@@ -3,42 +3,73 @@ require 'processor/runner'
 
 describe Processor::Runner do
   let(:runner) { Processor::Runner.new(processor, events_registrator) }
-  let(:processor) { stub }
+  let(:processor) { stub.as_null_object }
   let(:events_registrator) { stub.as_null_object }
   let(:no_process_runner) { Proc.new{} }
   let(:event) { mock.tap {|m| m.should_receive(:trigger)} }
 
-  it "should register a processing_started event" do
-    register_processing_event :processing_started
-    runner.run no_process_runner
+  describe "start processing" do
+    it "should start processing" do
+      processor.should_receive(:start)
+      runner.run no_process_runner
+    end
+
+    it "should register a processing_started event" do
+      register_processing_event :processing_started
+      runner.run no_process_runner
+    end
   end
 
-  it "should register a processing_finished event" do
-    register_processing_event :processing_finished
-    runner.run no_process_runner
+  describe "finish processing" do
+    it "should finish processing" do
+      processor.should_receive(:finish)
+      runner.run no_process_runner
+    end
+
+    it "should register a processing_finished event" do
+      register_processing_event :processing_finished
+      runner.run no_process_runner
+    end
+
+    it "should finalize processing" do
+      processor.should_receive(:finalize)
+      runner.run no_process_runner
+    end
+
+    it "should register a processing_finalized event" do
+      register_processing_event :processing_finalized
+      runner.run no_process_runner
+    end
   end
 
-  it "should register a processing_finalized event" do
-    register_processing_event :processing_finalized
-    runner.run no_process_runner
-  end
-
-  describe "exception handling" do
+  describe "processing error" do
     describe "processing records raised" do
+      let(:process_runner) { Proc.new { raise RuntimeError } }
+
       it "should break processing and rerise" do
         expect do
-          runner.run Proc.new { raise RuntimeError }
+          runner.run process_runner
         end.to raise_error(RuntimeError)
+      end
+
+      it "should send error to processor" do
+        processor.should_receive(:error)
+        runner.run process_runner rescue nil
       end
 
       it "should register a processing_error event" do
         register_processing_error_event
-        runner.run Proc.new { raise RuntimeError } rescue nil
+        runner.run process_runner rescue nil
+      end
+
+      it "should finalize processing" do
+        processor.should_receive(:finalize)
+        runner.run process_runner rescue nil
       end
 
       it "should register a processing_finalized event" do
         register_processing_event :processing_finalized
-        runner.run Proc.new { raise RuntimeError } rescue nil
+        runner.run process_runner rescue nil
       end
     end
   end
@@ -77,6 +108,7 @@ describe Processor::Runner do
       end.to raise_error(Exception, /Processing fall into recursion/)
     end
   end
+
   private
   def register_processing_error_event
     # Check that processing_error event was register

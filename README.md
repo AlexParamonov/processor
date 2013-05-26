@@ -52,14 +52,21 @@ Usage
 
 ### Data processors
 Actual processing is done by a Data Processor, provided by end user.  
-This processor should implement in general 2 methods:
+Inherit your Data Processor from NullProcessor to get default behavior
+out of the box. After inheritance Processor should implement in at
+least 2 methods:
 
 1. `process(record)`
 1. `records`
 
-But it is recomended to implement a `name` method also, because it
-is required by several observers. Inherit your Data Processor from
-NullProcessor to get default behavior out of the box.
+There are additional methods you could implement for Data Processor:
+
+`start`, `finish`, `error(exception)` and `finalize`.
+
+This methods are called if Data Processor started and successfully
+finished. `error` method is called if unprocessed errors happend
+during processig. `finalize` is called in any case allowing you to
+gracefully finalize a processing.
 
 See `Processor::Example::Migration` for example (`example/migration.rb`).
 
