@@ -10,7 +10,7 @@ module Processor
       end
 
       def total_records
-        @total_records ||= records.count
+        0
       end
 
       def name

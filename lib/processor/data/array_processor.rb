@@ -6,6 +6,10 @@ module Processor
       def records
         raise NotImplementedError
       end
+
+      def total_records
+        @total_records ||= records.count
+      end
     end
   end
 end
