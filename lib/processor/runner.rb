@@ -11,7 +11,7 @@ module Processor
       processor.start
       events.register :processing_started, processor
 
-      process_runner.call processor, events, method(:recursion_preventer)
+      process_runner.call processor, events
 
       processor.finish
       events.register :processing_finished, processor
@@ -27,21 +27,7 @@ module Processor
 
     end
 
-    protected
-    attr_writer :counter
-    def counter
-      @counter ||= 0
-    end
-
     private
     attr_reader :events, :processor
-    def recursion_preventer
-      self.counter += 1
-      raise Exception, "Processing fall into recursion. Check logs." if self.counter > max_records_to_process
-    end
-
-    def max_records_to_process
-      @max_records_to_process ||= (processor.total_records * 1.1).round + 10
-    end
   end
 end

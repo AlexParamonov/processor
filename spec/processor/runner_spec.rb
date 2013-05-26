@@ -74,40 +74,6 @@ describe Processor::Runner do
     end
   end
 
-  describe "recursion" do
-    before(:each) do
-      processor.stub(total_records: 100)
-      processor.stub(records: 1..Float::INFINITY)
-    end
-
-    it "should not fall into recursion" do
-      processor.should_receive(:process).at_most(1000).times
-
-      expect do
-        process_runner = Proc.new do |data_processor, events, recursion_preventer|
-          data_processor.records.each do |record|
-            recursion_preventer.call
-            data_processor.process record
-          end
-        end
-        runner.run process_runner
-      end.to raise_error(Exception, /Processing fall into recursion/)
-    end
-
-    it "should have 10% + 10 rerurns window" do
-      processor.should_receive(:process).exactly(120).times
-
-      expect do
-        process_runner = Proc.new do |data_processor, events, recursion_preventer|
-          data_processor.records.each do |record|
-            recursion_preventer.call
-            data_processor.process record
-          end
-        end
-        runner.run process_runner
-      end.to raise_error(Exception, /Processing fall into recursion/)
-    end
-  end
 
   private
   def register_processing_error_event

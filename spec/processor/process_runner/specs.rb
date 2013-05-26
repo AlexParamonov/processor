@@ -3,24 +3,23 @@ shared_examples_for "a records processor" do
   let(:records) { 1..2 }
   let(:processor) { stub.tap { |p| p.stub(records: records) } }
 
-  let(:no_recursion_preventer) { Proc.new{} }
   let(:no_events) { stub.as_null_object }
 
   it "should fetch records from processor" do
     processor.should_receive(:records).and_return([])
-    process_runner.call processor, no_events, no_recursion_preventer
+    process_runner.call processor, no_events
   end
 
   it "should send each found record to processor" do
     records.each { |record| processor.should_receive(:process).with(record) }
-    process_runner.call processor, no_events, no_recursion_preventer
+    process_runner.call processor, no_events
   end
 
   describe "exception handling" do
     describe "processing a record raised StandardError" do
       it "should continue processing" do
         processor.should_receive(:process).twice.and_raise(StandardError)
-        expect { process_runner.call processor, no_events, no_recursion_preventer }.to_not raise_error
+        expect { process_runner.call processor, no_events }.to_not raise_error
       end
 
       it "should register a record_processing_error event" do
@@ -36,14 +35,14 @@ shared_examples_for "a records processor" do
 
         processor.stub(:process).and_raise(StandardError)
 
-        process_runner.call processor, events_registrator, no_recursion_preventer rescue nil
+        process_runner.call processor, events_registrator rescue nil
       end
     end
 
     describe "processing a record raised Exception" do
       it "should break processing" do
         processor.should_receive(:process).once.and_raise(Exception)
-        expect { process_runner.call processor, no_events, no_recursion_preventer }.to raise_error(Exception)
+        expect { process_runner.call processor, no_events }.to raise_error(Exception)
       end
     end
   end

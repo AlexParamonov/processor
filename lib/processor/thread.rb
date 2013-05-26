@@ -1,10 +1,17 @@
 require 'processor/runner'
 require 'processor/process_runner/successive'
 require 'processor/process_runner/threads'
+require 'processor/subroutine/recursion'
+require 'processor/subroutine/counter'
+require 'processor/subroutine/name'
 
 module Processor
   class Thread
     def initialize(data_processor, *observers)
+      [Subroutine::Recursion, Subroutine::Counter, Subroutine::Name].each do |subroutine|
+        data_processor = subroutine.new(data_processor)
+      end
+
       @runner = Runner.new data_processor, EventsRegistrator.new(observers)
     end
 

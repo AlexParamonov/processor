@@ -6,12 +6,11 @@ module Processor
         @threads = []
       end
 
-      def call(processor, events, recursion_preventer)
+      def call(processor, events)
         join_threads
 
         begin
           processor.records.each do |record|
-            recursion_preventer.call
             if threads_created >= number_of_threads then join_threads end
 
             new_thread(processor, record) do |thread_data_processor, thread_record|

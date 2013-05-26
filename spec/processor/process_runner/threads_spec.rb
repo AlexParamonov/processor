@@ -3,7 +3,6 @@ require_relative 'specs'
 require 'processor/process_runner/threads'
 
 describe Processor::ProcessRunner::Threads do
-  let(:no_recursion_preventer) { Proc.new{} }
   let(:no_events) { stub.as_null_object }
   it_behaves_like "a records processor"
 
@@ -20,6 +19,6 @@ describe Processor::ProcessRunner::Threads do
     processor.stub(records: 1..9)
     processor.should_receive(:process).exactly(9).times
 
-    process_runner.call(processor, no_events, no_recursion_preventer)
+    process_runner.call(processor, no_events)
   end
 end
