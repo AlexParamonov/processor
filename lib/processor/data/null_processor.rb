@@ -7,11 +7,15 @@ module Processor
       def error(exception); end
 
       def process(record)
-        # do nothing
+        stats.record_processed
       end
 
       def records
         []
+      end
+
+      def stats
+        @stats ||= Processor::Statistic.new self
       end
 
       def total_records

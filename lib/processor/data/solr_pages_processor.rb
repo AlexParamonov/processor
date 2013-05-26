@@ -4,7 +4,7 @@ module Processor
   module Data
     class SolrPagesProcessor < BatchProcessor
       def process(record)
-        raise NotImplementedError
+        super
       end
 
       def query(requested_page)
