@@ -8,8 +8,9 @@ module Processor
         @messenger = options.fetch :messenger, Processor::Messenger.new(:info)
       end
 
-      def method_missing(*); end
-      alias_method :update, :send
+      def update(method_name, *args)
+        send method_name, *args if respond_to? method_name
+      end
 
       private
       attr_reader :messenger
