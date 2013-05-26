@@ -6,6 +6,22 @@ describe Processor::Runner do
   let(:processor) { stub }
   let(:events_registrator) { stub.as_null_object }
   let(:no_process_runner) { Proc.new{} }
+  let(:event) { mock.tap {|m| m.should_receive(:trigger)} }
+
+  it "should register a processing_started event" do
+    register_processing_event :processing_started
+    runner.run no_process_runner
+  end
+
+  it "should register a processing_finished event" do
+    register_processing_event :processing_finished
+    runner.run no_process_runner
+  end
+
+  it "should register a processing_finalized event" do
+    register_processing_event :processing_finalized
+    runner.run no_process_runner
+  end
 
   describe "exception handling" do
     describe "processing records raised" do
@@ -16,21 +32,14 @@ describe Processor::Runner do
       end
 
       it "should register a processing_error event" do
-        register_processing_error_event mock.tap { |event| event.should_receive :trigger }
+        register_processing_error_event
         runner.run Proc.new { raise RuntimeError } rescue nil
       end
-    end
 
-    private
-    def register_processing_error_event(event)
-      # Check that processing_error event was register
-      events_registrator.should_receive(:register) do |event_name, current_processor, exception|
-        next if event_name != :processing_error
-        event_name.should eq :processing_error
-        current_processor.should eq processor
-        exception.should be_a RuntimeError
-        event.trigger
-      end.any_number_of_times
+      it "should register a processing_finalized event" do
+        register_processing_event :processing_finalized
+        runner.run Proc.new { raise RuntimeError } rescue nil
+      end
     end
   end
 
@@ -67,6 +76,30 @@ describe Processor::Runner do
         runner.run process_runner
       end.to raise_error(Exception, /Processing fall into recursion/)
     end
+  end
+  private
+  def register_processing_error_event
+    # Check that processing_error event was register
+    events_registrator.should_receive(:register) do |triggered_event_name, current_processor, exception|
+      next if triggered_event_name != :processing_error
+      triggered_event_name.should eq :processing_error
+      current_processor.should eq processor
+      exception.should be_a RuntimeError
+      event.trigger
+    end.any_number_of_times
+
+    event
+  end
+
+  def register_processing_event(event_name)
+    events_registrator.should_receive(:register) do |triggered_event_name, current_processor, exception|
+      next if triggered_event_name != event_name
+      triggered_event_name.should eq event_name
+      current_processor.should eq processor
+      event.trigger
+    end.any_number_of_times
+
+    event
   end
 end
 

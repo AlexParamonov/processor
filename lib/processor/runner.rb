@@ -16,6 +16,8 @@ module Processor
     rescue Exception => exception
       events.register :processing_error, processor, exception
       raise exception
+    ensure
+      events.register :processing_finalized, processor
     end
 
     protected
