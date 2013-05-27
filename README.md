@@ -53,8 +53,7 @@ Usage
 ### Data processors
 Actual processing is done by a Data Processor, provided by end user.  
 Inherit your Data Processor from NullProcessor to get default behavior
-out of the box. After inheritance Processor should implement in at
-least 2 methods:
+out of the box. After this Processor should implement at least 2 methods:
 
 1. `process(record)`
 1. `records`
@@ -80,8 +79,8 @@ The simplest one: `process` and `records` methods should be implemented.
 #### BatchProcessor
 Allows to fetch records by batches of defined size.
 
-It is based on `query` method that suppose to run a query method on
-database.
+It is based on `query` method that is supposed to run a query method on
+a database.
 
 Recommended to override `fetch_batch` method to get real reason to
 use batch processing. `fetch_batch` could be `query.first(10)` or
@@ -125,10 +124,10 @@ Processor::Thread.new(migration).run_in_threads 5
 ### Observers
 Processor support unlimited number of observers, watching processing.
 
-They could monitor running migrations and output to logs, console or
-file useful information. Or they can show a progress bar to your
-console. Or pack a generated report to archive and send by email to
-business on success or notify developers on failure.
+They could monitor `Data Processor`s and output to logs, console or
+file. Or they can show a progress bar on the console. Or pack a generated
+report to archive and send it by email to the business on success or 
+notify developers on failure.
 
 
 This observers should respond to `update` method. But if you inherit
@@ -141,7 +140,7 @@ Read below section Processor Thread to see how to use observers in runner.
 
 ### Processor Thread
 `Processor::Thread` is a Facade pattern. It simplifies access to all
-Processor classes and provide __stable__ interface.
+Processor classes and provides __stable__ interface.
 
 Creating a new Thread:
 ``` ruby
