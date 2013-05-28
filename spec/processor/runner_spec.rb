@@ -77,10 +77,8 @@ describe Processor::Runner do
 
   private
   def register_processing_error_event
-    # Check that processing_error event was register
     events_registrator.should_receive(:register) do |triggered_event_name, current_processor, exception|
       next if triggered_event_name != :processing_error
-      triggered_event_name.should eq :processing_error
       current_processor.should eq processor
       exception.should be_a RuntimeError
       event.trigger
@@ -90,9 +88,8 @@ describe Processor::Runner do
   end
 
   def register_processing_event(event_name)
-    events_registrator.should_receive(:register) do |triggered_event_name, current_processor, exception|
+    events_registrator.should_receive(:register) do |triggered_event_name, current_processor|
       next if triggered_event_name != event_name
-      triggered_event_name.should eq event_name
       current_processor.should eq processor
       event.trigger
     end.any_number_of_times
