@@ -21,6 +21,14 @@ describe Processor::Messenger do
     messenger.fatal "fatal error"
   end
 
+  it "should not send empty messages" do
+    io.should_not_receive(:write)
+    messenger = Processor::Messenger.new :info, io
+    [nil, ""].each do |empty_message|
+      messenger.message empty_message
+    end
+  end
+
   describe "messages" do
     let(:messenger) { Processor::Messenger.new :debug, io }
     %w[debug info error fatal].each do |message_level|

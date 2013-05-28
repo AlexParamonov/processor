@@ -18,6 +18,13 @@ module Processor
       super logger
     end
 
+    %w[debug info warn error fatal unknown].each do |method_name|
+      define_method method_name do |message, *args|
+        return if message.nil? || message.empty?
+        super message, *args
+      end
+    end
+
     def message(*args)
       self.info *args
     end
