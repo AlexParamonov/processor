@@ -29,6 +29,13 @@ describe Processor::Messenger do
     end
   end
 
+  it "should send messages from a name of sender" do
+    sender = "File Logger"
+    io.should_receive(:write).with /#{sender}/
+    messenger = Processor::Messenger.new :info, io, sender
+    messenger.error "failed to create log file"
+  end
+
   describe "messages" do
     let(:messenger) { Processor::Messenger.new :debug, io }
     %w[debug info error fatal].each do |message_level|

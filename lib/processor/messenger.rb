@@ -2,7 +2,8 @@ require "logger"
 
 module Processor
   class Messenger < SimpleDelegator
-    def initialize(level = :info, file = STDOUT)
+    def initialize(level = :info, file = STDOUT, sender = nil)
+      @sender = sender
       if level == :null
         file = "/dev/null"
         level = :fatal
@@ -30,12 +31,16 @@ module Processor
     end
 
     private
+    attr_reader :sender
     def format_message(severity, datetime, progname, message)
       lines = message.split("\n").map do |line|
         "> %s" % line.gsub(/^\s+/, '')
       end.join("\n")
 
-      "\n#{severity} message on #{datetime}:\n#{lines}\n\n"
+      message = "\n#{severity} message"
+      message << " from #{sender}" if sender
+      message << " on #{datetime}"
+      message << ":\n#{lines}\n"
     end
   end
 end

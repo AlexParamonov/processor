@@ -5,7 +5,7 @@ module Processor
   module Observer
     class NullObserver
       def initialize(options = {})
-        @messenger = options.fetch :messenger, Processor::Messenger.new(:info)
+        @messenger = options.fetch :messenger, Processor::Messenger.new(:info, STDOUT, self.class.name)
       end
 
       def update(method_name, *args)
