@@ -43,6 +43,7 @@ module Processor
 
         stdout_logger_debug = Processor::Observer::Logger.new(logger1, messenger: messenger)
         stdout_logger_info = Processor::Observer::Logger.new(logger2)
+        # file_logger_info = Processor::Observer::Logger.new
         your_custom_observer1 = Observer::NullObserver.new
         your_custom_observer2 = Observer::NullObserver.new
 
@@ -50,6 +51,7 @@ module Processor
           migration,
           stdout_logger_debug,
           stdout_logger_info,
+          # file_logger_info,
           your_custom_observer1,
           your_custom_observer2,
         )
