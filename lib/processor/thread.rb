@@ -8,7 +8,7 @@ require 'processor/subroutine/name'
 module Processor
   class Thread
     def initialize(data_processor, *observers)
-      [Subroutine::Recursion, Subroutine::Counter, Subroutine::Name].each do |subroutine|
+      [Subroutine::Name, Subroutine::Recursion, Subroutine::Counter].each do |subroutine|
         data_processor = subroutine.new(data_processor)
       end
 
