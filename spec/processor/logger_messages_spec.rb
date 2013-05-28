@@ -13,7 +13,7 @@ describe Processor::LoggerMessages do
 
   describe "Ruby Logger" do
     describe "file" do
-      let(:filename) { "/tmp" }
+      let(:filename) { "spec/support/dummy_file" }
       let(:logger) { Logger.new File.new(filename) }
 
       it "should include file name into message" do
@@ -23,7 +23,7 @@ describe Processor::LoggerMessages do
     end
 
     describe "filename" do
-      let(:filename) { "/tmp/processor_gem_test.log" }
+      let(:filename) { "spec/support/dummy_file" }
       let(:logger) { Logger.new filename }
 
       it "should include file name into message" do
