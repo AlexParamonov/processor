@@ -30,7 +30,7 @@ module Processor
         logger.info "Processed #{id_for record}: #{result}"
       end
 
-      def processing_finished(processor)
+      def processing_finalized(processor)
         logger.info "Processing of #{processor.name} finished."
         messenger.info "Log file saved to #{log_file_name}" if use_log_file?
       end
