@@ -84,8 +84,7 @@ a database.
 
 Recommended to override `fetch_batch` method to get real reason to
 use batch processing. `fetch_batch` could be `query.first(10)` or
-`query.page(next_page)`. See `data/solr_pages_processor.rb` and
-`data/solr_processor.rb` for example.
+`query.page(next_page)`. See `data/solr_pages_processor.rb`.
 
 
 #### Other
