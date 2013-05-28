@@ -8,7 +8,7 @@ module Processor
       def initialize(logger = nil, options = {})
         @logger_source = logger
         @messages = options.fetch :messages do
-          Processor::LoggerMessages.new logger
+          Processor::LoggerMessages.for logger
         end
         super options
       end

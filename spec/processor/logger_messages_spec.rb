@@ -3,7 +3,7 @@ require "logger"
 require "processor/logger_messages"
 
 describe Processor::LoggerMessages do
-  let(:presenter) { Processor::LoggerMessages.new logger }
+  let(:presenter) { Processor::LoggerMessages.for logger }
   shared_examples_for "a null logger" do
     it "should not produce any output" do
       presenter.finished.should eq ""
