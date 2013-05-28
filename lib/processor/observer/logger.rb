@@ -1,25 +1,22 @@
-require_relative 'null_observer'
 require 'logger'
+require_relative 'null_observer'
+require 'processor/logger_messages'
 
 module Processor
   module Observer
     class Logger < NullObserver
       def initialize(logger = nil, options = {})
         @logger_source = logger
+        @messages = options.fetch :messages do
+          Processor::LoggerMessages.new logger
+        end
         super options
       end
 
       def processing_started(processor)
         initialize_logger(processor)
         logger.info "Processing of #{processor.name} started."
-
-        message = <<-MESSAGE
-          Proggress will be saved to the log file. Run
-          tail -f #{log_file_name}
-          to see log in realtime
-        MESSAGE
-
-        messenger.info message if use_log_file?
+        messenger.info messages.initialized
       end
 
       def before_record_processing(record)
@@ -32,7 +29,7 @@ module Processor
 
       def processing_finalized(processor)
         logger.info "Processing of #{processor.name} finished."
-        messenger.info "Log file saved to #{log_file_name}" if use_log_file?
+        messenger.message messages.finished
       end
 
       def record_processing_error(record, exception)
@@ -44,7 +41,7 @@ module Processor
       end
 
       private
-      attr_reader :logger, :log_file_name
+      attr_reader :logger, :messages
 
       def initialize_logger(processor)
         @logger =
@@ -65,10 +62,6 @@ module Processor
 
       def log_directory
         "log"
-      end
-
-      def use_log_file?
-        not log_file_name.nil?
       end
 
       def current_time_string
