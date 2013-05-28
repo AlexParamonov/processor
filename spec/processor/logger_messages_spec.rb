@@ -3,11 +3,11 @@ require "logger"
 require "processor/logger_messages"
 
 describe Processor::LoggerMessages do
-  let(:presenter) { Processor::LoggerMessages.new logger }
+  let(:messages) { Processor::LoggerMessages.new logger }
   shared_examples_for "a null logger" do
     it "should not produce any output" do
-      presenter.finished.should eq ""
-      presenter.initialized.should eq ""
+      messages.finished.should eq ""
+      messages.initialized.should eq ""
     end
   end
 
@@ -17,8 +17,8 @@ describe Processor::LoggerMessages do
       let(:logger) { Logger.new File.new(filename) }
 
       it "should include file name into message" do
-        presenter.finished.should include filename
-        presenter.initialized.should include filename
+        messages.finished.should include filename
+        messages.initialized.should include filename
       end
     end
 
@@ -27,8 +27,8 @@ describe Processor::LoggerMessages do
       let(:logger) { Logger.new filename }
 
       it "should include file name into message" do
-        presenter.finished.should include filename
-        presenter.initialized.should include filename
+        messages.finished.should include filename
+        messages.initialized.should include filename
       end
     end
 
@@ -41,8 +41,8 @@ describe Processor::LoggerMessages do
       let(:logger) { Logger.new(STDOUT) }
 
       it "should include IO in the message" do
-        presenter.initialized.should include "IO"
-        presenter.finished.should eq ""
+        messages.initialized.should include "IO"
+        messages.finished.should eq ""
       end
     end
 
@@ -50,8 +50,8 @@ describe Processor::LoggerMessages do
       let(:logger) { Logger.new(STDERR) }
 
       it "should include IO in the message" do
-        presenter.initialized.should include "IO"
-        presenter.finished.should eq ""
+        messages.initialized.should include "IO"
+        messages.finished.should eq ""
       end
     end
   end
