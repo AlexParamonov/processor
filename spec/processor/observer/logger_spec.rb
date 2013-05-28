@@ -30,10 +30,20 @@ describe Processor::Observer::Logger do
     logger_observer.processing_started processor
   end
 
-  it "accepts messages as option" do
+  it "accepts messages object as option" do
     messages = mock
-    observer = subject.new no_logger, messages: messages, messenger: no_messages
     messages.should_receive(:initialized)
+
+    observer = subject.new no_logger, messages: messages, messenger: no_messages
+    observer.processing_started processor
+  end
+
+  it "accepts messages hash as option" do
+    messages = {initialized: "INIT"}
+    messenger = no_messages
+    messenger.should_receive(:info).with("INIT")
+
+    observer = subject.new no_logger, messages: messages, messenger: messenger
     observer.processing_started processor
   end
 end

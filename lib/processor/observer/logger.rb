@@ -1,4 +1,5 @@
 require 'logger'
+require 'ostruct'
 require_relative 'null_observer'
 require 'processor/logger_messages'
 
@@ -10,6 +11,8 @@ module Processor
         @messages = options.fetch :messages do
           Processor::LoggerMessages.new logger
         end
+        @messages = OpenStruct.new @messages if @messages.is_a? Hash
+
         super options
       end
 
