@@ -8,9 +8,7 @@ module Processor
     class Logger < NullObserver
       def initialize(logger = nil, options = {})
         @logger_source = logger
-        @messages = options.fetch :messages do
-          Processor::LoggerMessages.new logger
-        end
+        @messages = options.fetch :messages, nil
         @messages = OpenStruct.new @messages if @messages.is_a? Hash
 
         super options
@@ -56,6 +54,8 @@ module Processor
             end
           end
         messenger.debug "Observer initialized with logger #{@logger}"
+
+        @messages ||= Processor::LoggerMessages.new logger
       end
 
       def create_log_filename(processor_name)
