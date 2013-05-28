@@ -19,10 +19,10 @@ module Processor
       super logger
     end
 
-    %w[debug info warn error fatal unknown].each do |method_name|
-      define_method method_name do |message, *args|
+    %w[debug info warn error fatal unknown].each do |level|
+      define_method level do |message, &block|
         return if message.nil? || message.empty?
-        super message, *args
+        add(Logger.const_get(level.upcase), nil, message, &block)
       end
     end
 
