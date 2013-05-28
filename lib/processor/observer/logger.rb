@@ -59,7 +59,11 @@ module Processor
       end
 
       def create_log_filename(processor_name)
-        FileUtils.mkdir log_directory unless File.directory? log_directory
+        unless File.directory? log_directory
+          FileUtils.mkdir log_directory
+          messenger.warn "Created new directory for logs: #{File.absolute_path log_directory}"
+        end
+
         @log_file_name = "#{log_directory}/#{processor_name}_on_#{current_time_string}.log"
       end
 
