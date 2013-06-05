@@ -14,47 +14,47 @@ module Processor
         super options
       end
 
-      def processing_started(processor)
-        initialize_logger(processor)
+      def after_start(result)
         logger.info "Processing of #{processor.name} started."
         messenger.info messages.initialized
       end
 
-      def before_record_processing(record)
+      def before_process(record)
         logger.debug "Record #{id_for record} is going to be processed"
       end
 
-      def after_record_processing(record, result)
+      def after_process(result, record)
         logger.info "Processed #{id_for record}: #{result}"
       end
 
-      def processing_finalized(processor)
+      def after_finalize(result)
         logger.info "Processing of #{processor.name} finished."
         messenger.message messages.finished
       end
 
-      def record_processing_error(record, exception)
+      def after_record_error(result, record, exception)
         logger.error "Error processing #{id_for record}: #{exception}"
       end
 
-      def processing_error(processor, exception)
+      def after_error(result, exception)
         logger.fatal "Processing #{processor.name} FAILED: #{exception.backtrace}"
       end
 
-      private
-      attr_reader :logger, :messages
-
-      def initialize_logger(processor)
-        @logger =
-          if @logger_source.is_a? Proc
+      def logger
+        @logger ||= begin
+        if @logger_source.is_a? Proc
             @logger_source.call processor.name
           else
             @logger_source or ::Logger.new(create_log_filename(processor.name)).tap do |logger|
               logger.level = ::Logger::INFO
             end
           end
-        messenger.debug "Observer initialized with logger #{@logger}"
+        end
+      end
 
+      private
+
+      def messages
         @messages ||= Processor::LoggerMessages.new logger
       end
 

@@ -1,48 +1,38 @@
 shared_examples_for "a records processor" do
   let(:process_runner) { described_class.new }
   let(:records) { 1..2 }
-  let(:processor) { stub.tap { |p| p.stub(records: records) } }
-
-  let(:no_events) { stub.as_null_object }
+  let(:processor) { stub.tap { |p| p.stub(records: records) }.as_null_object }
 
   it "should fetch records from processor" do
     processor.should_receive(:records).and_return([])
-    process_runner.call processor, no_events
+    process_runner.call processor
   end
 
   it "should send each found record to processor" do
     records.each { |record| processor.should_receive(:process).with(record) }
-    process_runner.call processor, no_events
+    process_runner.call processor
   end
 
   describe "exception handling" do
     describe "processing a record raised StandardError" do
+      let(:records) { 1..3 }
+
       it "should continue processing" do
-        processor.should_receive(:process).twice.and_raise(StandardError)
-        expect { process_runner.call processor, no_events }.to_not raise_error
+        processor.should_receive(:process).exactly(3).times.and_raise(StandardError)
+        expect { process_runner.call processor }.to_not raise_error
       end
 
-      it "should register a record_processing_error event" do
-        event = mock.tap { |event| event.should_receive(:trigger).any_number_of_times }
-
-        events_registrator = stub
-        events_registrator.should_receive(:register) do |event_name, failed_record, exception|
-          next if event_name != :record_processing_error
-          event_name.should eq :record_processing_error
-          exception.should be_a StandardError
-          event.trigger
-        end.any_number_of_times
-
-        processor.stub(:process).and_raise(StandardError)
-
-        process_runner.call processor, events_registrator rescue nil
+      it "should call record_error" do
+        processor.should_receive(:process).at_least(1).and_raise(StandardError)
+        processor.should_receive(:record_error).at_least(1)
+        process_runner.call processor
       end
     end
 
     describe "processing a record raised Exception" do
       it "should break processing" do
         processor.should_receive(:process).once.and_raise(Exception)
-        expect { process_runner.call processor, no_events }.to raise_error(Exception)
+        expect { process_runner.call processor }.to raise_error(Exception)
       end
     end
   end

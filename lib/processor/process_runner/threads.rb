@@ -6,7 +6,7 @@ module Processor
         @threads = []
       end
 
-      def call(processor, events)
+      def call(processor)
         join_threads
 
         begin
@@ -15,13 +15,9 @@ module Processor
 
             new_thread(processor, record) do |thread_data_processor, thread_record|
               begin
-                events.register :before_record_processing, thread_record
-
-                result = thread_data_processor.process(thread_record)
-
-                events.register :after_record_processing, thread_record, result
+                thread_data_processor.process(thread_record)
               rescue StandardError => exception
-                events.register :record_processing_error, thread_record, exception
+                thread_data_processor.record_error thread_record, exception
               end
             end
 

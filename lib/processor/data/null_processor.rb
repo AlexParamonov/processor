@@ -5,6 +5,7 @@ module Processor
       def finish; end
       def finalize; end
       def error(exception); end
+      def record_error(exception); end
 
       def process(record)
         # do nothing
@@ -17,7 +18,6 @@ module Processor
       def total_records
         0
       end
-
     end
   end
 end

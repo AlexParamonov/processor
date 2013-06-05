@@ -13,7 +13,7 @@ describe Processor::Thread do
 
   it "should run a migration using provided block" do
     thread = Processor::Thread.new @migration
-    thread.run_as do |processor, *|
+    thread.run_as do |processor|
       processor.records.each do |record|
         processor.process record
       end

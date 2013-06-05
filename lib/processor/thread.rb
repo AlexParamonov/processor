@@ -1,4 +1,5 @@
 require 'processor/runner'
+require 'processor/event_processor'
 require 'processor/process_runner/successive'
 require 'processor/process_runner/threads'
 require 'processor/subroutine/recursion'
@@ -12,7 +13,7 @@ module Processor
         data_processor = subroutine.new(data_processor)
       end
 
-      @runner = Runner.new data_processor, EventsRegistrator.new(observers)
+      @runner = Runner.new EventProcessor.new(data_processor, observers)
     end
 
     def run_as(&process_runner)
