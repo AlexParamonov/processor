@@ -1,6 +1,7 @@
 require 'logger'
 require 'ostruct'
 require_relative 'null_observer'
+require 'processor/subroutine/name'
 require 'processor/logger_messages'
 
 module Processor
@@ -15,7 +16,7 @@ module Processor
       end
 
       def after_start(result)
-        logger.info "Processing of #{processor.name} started."
+        logger.info "Processing of #{processor_name} started."
         messenger.info messages.initialized
       end
 
@@ -28,7 +29,7 @@ module Processor
       end
 
       def after_finalize(result)
-        logger.info "Processing of #{processor.name} finished."
+        logger.info "Processing of #{processor_name} finished."
         messenger.message messages.finished
       end
 
@@ -37,15 +38,15 @@ module Processor
       end
 
       def after_error(result, exception)
-        logger.fatal "Processing #{processor.name} FAILED: #{exception.backtrace}"
+        logger.fatal "Processing #{processor_name} FAILED: #{exception.backtrace}"
       end
 
       def logger
         @logger ||= begin
         if @logger_source.is_a? Proc
-            @logger_source.call processor.name
+            @logger_source.call processor_name
           else
-            @logger_source or ::Logger.new(create_log_filename(processor.name)).tap do |logger|
+            @logger_source or ::Logger.new(create_log_filename(processor_name)).tap do |logger|
               logger.level = ::Logger::INFO
             end
           end
@@ -55,7 +56,15 @@ module Processor
       private
 
       def messages
-        @messages ||= Processor::LoggerMessages.new logger
+        @messages ||= LoggerMessages.new logger
+      end
+
+      def processor_name
+        @processor_name ||=
+          begin
+            @processor = Subroutine::Name.new processor unless processor.respond_to? :name
+            processor.name
+          end
       end
 
       def create_log_filename(processor_name)

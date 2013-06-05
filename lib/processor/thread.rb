@@ -3,15 +3,11 @@ require 'processor/event_processor'
 require 'processor/process_runner/successive'
 require 'processor/process_runner/threads'
 require 'processor/subroutine/recursion'
-require 'processor/subroutine/counter'
-require 'processor/subroutine/name'
 
 module Processor
   class Thread
     def initialize(data_processor, *observers)
-      [Subroutine::Name, Subroutine::Counter, Subroutine::Recursion].each do |subroutine|
-        data_processor = subroutine.new(data_processor)
-      end
+      data_processor = Subroutine::Recursion.new(data_processor)
 
       @runner = Runner.new EventProcessor.new(data_processor, observers)
     end
