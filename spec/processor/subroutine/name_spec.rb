@@ -13,5 +13,10 @@ describe Processor::Subroutine::Name do
     processor.stub(name: "Processor's name")
     subroutine.name.should eq "Processor's name"
   end
+
+  it "should use real object's name, not delegator" do
+    double_wrapped_processor = Processor::Subroutine::Name.new(SimpleDelegator.new processor)
+    double_wrapped_processor.name.should eq "name_space_data_processor"
+  end
 end
 
