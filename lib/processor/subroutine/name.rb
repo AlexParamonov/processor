@@ -2,6 +2,7 @@ module Processor
   module Subroutine
     class Name < ::SimpleDelegator
       def name
+        return super if __getobj__.respond_to? :name
         # underscore a class name
         __getobj__.class.name.to_s.
           gsub(/::/, '_').

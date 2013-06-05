@@ -8,5 +8,10 @@ describe Processor::Subroutine::Name do
   it "should have a name equals to underscored processor class name" do
     subroutine.name.should eq "name_space_data_processor"
   end
+
+  it "should use processor's name method if defined" do
+    processor.stub(name: "Processor's name")
+    subroutine.name.should eq "Processor's name"
+  end
 end
 
