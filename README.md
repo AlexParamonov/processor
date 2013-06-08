@@ -117,9 +117,9 @@ Subroutines are small programs that do exactly one task. It is
 possible to enhance data processor by passing it to subroutine first.
 Subroutines are decorators. There are several predefined subroutines:
 
-1. Name
-1. Count
-1. Recursion
+1. Name [[code](https://github.com/AlexParamonov/processor/blob/master/lib/processor/subroutine/name.rb), [specs](https://github.com/AlexParamonov/processor/blob/master/spec/processor/subroutine/name_spec.rb)]
+1. Count [[code](https://github.com/AlexParamonov/processor/blob/master/lib/processor/subroutine/counter.rb), [specs](https://github.com/AlexParamonov/processor/blob/master/spec/processor/subroutine/counter_spec.rb)]
+1. Recursion [[code](https://github.com/AlexParamonov/processor/blob/master/lib/processor/subroutine/recursion.rb), [specs](https://github.com/AlexParamonov/processor/blob/master/spec/processor/subroutine/recursion_spec.rb)]
 
 `Subroutine::Name` adds `name` method that returns name of the current
 data processor. `Subroutine::Count` adds `remaining_records_count` and
