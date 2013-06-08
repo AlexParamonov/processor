@@ -5,18 +5,18 @@ Processor
 [![Coverage Status](https://coveralls.io/repos/AlexParamonov/processor/badge.png?branch=master)](https://coveralls.io/r/AlexParamonov/processor?branch=master)
 
 
-Processor is a tool that helps to iterate over collection and
+Processor is a tool that helps to iterate over a collection and
 perform complex actions on a result. It is extremely useful in data
 migrations, report generation, etc.
 
 Collection could be iteratively fetched by parts but for processor
 it will looks like an endless collection. There are a lot such tiny
 goodness that makes usage of processor pleasant. Need logging,
-exception processing, post/pre processing a result - no problems, all
+exception processing, post/pre processing a result? No problem - all
 included and easily extended.
 
-Use the processor to DRY your migrations, report and stop mess with
-logging and post processing.
+Use the processor to DRY your migrations, reports and to stop mess
+with logging and post processing.
 
 Did I mentioned you can run in threads as easy as say
 `processor.run_in_threads 10`?
@@ -36,8 +36,8 @@ Contents
     1. Data processors
     1. Subroutines
     1. Run modes
-    1. Processor Thread
     1. Observers
+    1. Processor Thread
 1. Contacts
 1. Compatibility
 1. Contributing
@@ -45,7 +45,7 @@ Contents
 
 Installation
 ------------
-Add this line to your application's Gemfile:
+If on Rails, add this line to your application's Gemfile:
 ``` ruby
 gem 'processor'
 ```
@@ -55,7 +55,7 @@ And then execute:
 bundle
 ```
 
-Or install it yourself as:
+Or install it yourself:
 ``` sh
 gem install processor
 ```
