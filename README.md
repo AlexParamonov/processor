@@ -34,6 +34,7 @@ Contents
 1. Requirements
 1. Usage
     1. Data processors
+    1. Subroutines
     1. Run modes
     1. Processor Thread
     1. Observers
@@ -110,6 +111,33 @@ example. See `data/solr_pages_processor.rb`.
 #### Other
 see `data/csv_processor.rb` for running migration from CSV files.
 
+
+### Subroutines
+Subroutines are small programs that do exactly one task. It is
+possible to enhance data processor by passing it to subroutine first.
+Subroutines are decorators. There are several predefined subroutines:
+
+1. Name
+1. Count
+1. Recursion
+
+`Subroutine::Name` adds `name` method that returns name of the current
+data processor. `Subroutine::Count` adds `remaining_records_count` and
+`processed_records_count` methods. `Subroutine::Recursion` prevents
+recursion of data processor. It uses `total_records` method and take
+care about keeping count of `process` method calls in borders.
+
+Some subroutines are used by parts of `Processor` when needed:
+`Subroutine::Name` is used in `Observer::Logger`, `Subroutine::Count`
+is used by `Subroutine::Recursion`
+
+To use `Subroutine::Recursion`, first wrap a data processor before
+running it:
+
+``` ruby
+user_updater = Processor::Subroutine::Recursion.new(UpdateUserLocationCodes.new)
+Processor::Thread.new(user_updater).run_successive
+```
 
 ### Run modes
 Currently 2 run modes are supported:

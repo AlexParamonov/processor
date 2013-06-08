@@ -7,8 +7,6 @@ require 'processor/subroutine/recursion'
 module Processor
   class Thread
     def initialize(data_processor, *observers)
-      data_processor = Subroutine::Recursion.new(data_processor)
-
       @runner = Runner.new EventProcessor.new(data_processor, observers)
     end
 
