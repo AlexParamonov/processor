@@ -46,16 +46,19 @@ Contents
 Installation
 ------------
 If on Rails, add this line to your application's Gemfile:
+
 ``` ruby
 gem 'processor'
 ```
 
 And then execute:
+
 ``` sh
 bundle
 ```
 
 Or install it yourself:
+
 ``` sh
 gem install processor
 ```
@@ -148,6 +151,7 @@ It runs `process` one by one for each found record returned by
 `records` method.
 
 Call it using a `Processor::Thread`:
+
 ``` ruby
 Processor::Thread.new(migration).run_successive
 ```
@@ -158,11 +162,13 @@ not waiting for previous `process` to finish.
 
 Possible to specify number of threads used by passing a number to
 constructor:
+
 ``` ruby
 Processor::ProcessRunner::Threads.new 5
 ```
 
 Call it using a `Processor::Thread`:
+
 ``` ruby
 Processor::Thread.new(migration).run_in_threads 5
 ```
@@ -191,16 +197,19 @@ Read below section Processor Thread to see how to use observers in runner.
 Processor classes and provides __stable__ interface.
 
 Creating a new Thread:
+
 ``` ruby
 Processor::Thread.new data_processor
 ```
 
 You may provide optional observers:
+
 ``` ruby
 Processor::Thread.new data_processor, observer1, observer2, ...
 ```
 
 Instance have a `run_as` method that accepts a block:
+
 ``` ruby
 thread = Processor::Thread.new @migration
 thread.run_as do |processor|
@@ -211,6 +220,7 @@ end
 ```
 
 Instance have a `run_successive` method: 
+
 ``` ruby
 data_processor = UserLocationMigration.new
 thread = Processor::Thread.new data_processor
@@ -218,6 +228,7 @@ thread.run_successive
 ```
 
 And `run_in_threads` method:
+
 ``` ruby
 data_processor = UserCsvImport.new csv_file
 thread = Processor::Thread.new data_processor
@@ -228,6 +239,7 @@ See `spec/processor/thread_spec.rb` and `spec/example_spec.rb` and
 `example` directory for other usage examples.
 
 It is recommended to wrap Processor::Thread by classes named like:
+
 ``` ruby
 WeeklyReport
 TaxonomyMigration
@@ -236,6 +248,7 @@ UserDataImport
 
 The point is to hide configuration of observers and use (if you wish)
 your own API to run reports or migrations:
+
 ``` ruby
 weekly_report.create_and_deliver
 user_data_import.from_csv(file)
@@ -244,6 +257,7 @@ etc.
 
 It is possible to use it raw, but please don't fear to add a wrapper
 class like `CsvUserImport` for this:
+
 ``` ruby
 csv_data_processor = Processor::Data::CsvProcessor.new file
 stdout_notifier = Processor::Observer::Logger.new(Logger.new(STDOUT))
@@ -257,6 +271,7 @@ Processor::Thread.new(
 ```
 
 More documentation could be found by running
+
 ``` sh
 rspec
 ```
