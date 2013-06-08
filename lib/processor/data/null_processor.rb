@@ -5,7 +5,7 @@ module Processor
       def finish; end
       def finalize; end
       def error(exception); end
-      def record_error(exception); end
+      def record_error(record, exception); end
 
       def process(record)
         # do nothing
