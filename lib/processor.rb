@@ -13,6 +13,10 @@ require "processor/observer/null_observer"
 require "processor/process_runner/successive"
 require "processor/process_runner/threads"
 
+require "processor/subroutine/counter"
+require "processor/subroutine/recursion"
+require "processor/subroutine/name"
+
 require "processor/runner"
 require "processor/thread"
 

@@ -2,7 +2,6 @@ require 'processor/runner'
 require 'processor/event_processor'
 require 'processor/process_runner/successive'
 require 'processor/process_runner/threads'
-require 'processor/subroutine/recursion'
 
 module Processor
   class Thread
