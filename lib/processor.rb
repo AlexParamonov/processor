@@ -1,3 +1,4 @@
+require "processor/environment"
 require "processor/version"
 
 require "processor/data/array_processor"

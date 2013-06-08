@@ -1,4 +1,4 @@
-require 'pry'
+require 'pry' unless Processor::RUNNING_ON_CI
 
 ENV['RAILS_ENV'] ||= 'test'
 require "rspec"

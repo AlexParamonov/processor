@@ -2,6 +2,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'processor/version'
+require 'processor/environment'
 
 Gem::Specification.new do |gem|
   gem.name          = "processor"
@@ -21,7 +22,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", ">= 2.6"
-  gem.add_development_dependency "pry"
-  gem.add_development_dependency "pry-plus" if "ruby" == RUBY_ENGINE
+  gem.add_development_dependency "pry" unless Processor::RUNNING_ON_CI
+  gem.add_development_dependency "pry-plus" if "ruby" == RUBY_ENGINE && false == Processor::RUNNING_ON_CI
 end
 
