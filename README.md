@@ -1,7 +1,9 @@
 Processor
 ==========
 [![Build Status](https://travis-ci.org/AlexParamonov/processor.png?branch=master)](http://travis-ci.org/AlexParamonov/processor)
-[![Gemnasium Build Status](https://gemnasium.com/AlexParamonov/processor.png)](http://gemnasium.com/AlexParamonov/processor)  
+[![Gemnasium Build Status](https://gemnasium.com/AlexParamonov/processor.png)](http://gemnasium.com/AlexParamonov/processor)
+[![Coverage Status](https://coveralls.io/repos/AlexParamonov/processor/badge.png?branch=master)](https://coveralls.io/r/AlexParamonov/processor?branch=master)
+
 
 Processor could execute any `DataProcessor` you specify and log entire
 process using any number of loggers you need.
@@ -9,7 +11,7 @@ process using any number of loggers you need.
 You may add own observers for monitoring background tasks on even send
 an email to business with generated report.
 
-Processor provide customisation for almost every part of it.  
+Processor provide customisation for almost every part of it.
 
 
 Contents
