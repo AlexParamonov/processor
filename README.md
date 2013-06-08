@@ -21,13 +21,11 @@ logging and post processing.
 Did I mentioned you can run in threads as easy as say
 `processor.run_in_threads 10`?
 
-Processor could execute any `DataProcessor` you specify and log entire
-process using any number of loggers you need.
-
-You may add own observers for monitoring background tasks on even send
-an email to business with generated report.
-
-Processor provide customisation for almost every part of it.
+Processor could execute any `DataProcessor` you specify and log
+entire process using any number of loggers you need. You may add own
+observers for monitoring background tasks on even send an email to
+business with generated report. Processor provide customisation for
+almost every part of it.
 
 
 Contents
@@ -39,6 +37,7 @@ Contents
     1. Run modes
     1. Processor Thread
     1. Observers
+1. Contacts
 1. Compatibility
 1. Contributing
 1. Copyright
@@ -84,13 +83,14 @@ To add new `DataProcessor` it is recommended to inherit from
 `NullProcessor` and implement methods that are needed only.
 
 `Processor` provides several data processors:
-1. NullProcessor
-1. ArrayProcessor
-1. BatchProcessor
+
+1. NullProcessor [[code](https://github.com/AlexParamonov/processor/blob/master/lib/processor/data/null_processor.rb), [specs](https://github.com/AlexParamonov/processor/blob/master/spec/processor/data/null_processor_spec.rb)]
+1. ArrayProcessor [[code](https://github.com/AlexParamonov/processor/blob/master/lib/processor/data/array_processor.rb), [specs](https://github.com/AlexParamonov/processor/blob/master/spec/processor/data/array_processor_spec.rb)]
+1. BatchProcessor [[code](https://github.com/AlexParamonov/processor/blob/master/lib/processor/data/batch_processor.rb), [specs](https://github.com/AlexParamonov/processor/blob/master/spec/processor/data/batch_processor_spec.rb)]
 1. CsvProcessor
 1. SolrPagesProcessor
 
-The last two are more as example, your probably would to change them.
+The last two are more as example, your probably would change them.
 
 #### ArrayProcessor
 The simplest one: `process` and `records` methods should be implemented.
@@ -234,6 +234,12 @@ rspec
 ```
 
 Find more examples under [example directory](https://github.com/AlexParamonov/processor/tree/master/example)
+
+Contacts
+-------------
+Have questions or recommendations? Contact me via `alexander.n.paramonov@gmail.com`
+Found a bug or have enhancement request? You are welcome at [Github bugtracker](https://github.com/AlexParamonov/processor/issues)
+
 
 Compatibility
 -------------
