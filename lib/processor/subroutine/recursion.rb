@@ -1,4 +1,5 @@
 require_relative 'counter'
+require 'delegate'
 
 module Processor
   module Subroutine

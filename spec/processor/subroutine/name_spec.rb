@@ -1,4 +1,5 @@
 require 'spec_helper_lite'
+require 'delegate'
 require 'processor/subroutine/name'
 
 describe Processor::Subroutine::Name do

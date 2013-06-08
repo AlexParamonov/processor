@@ -1,4 +1,5 @@
-require "logger"
+require 'logger'
+require 'delegate'
 
 module Processor
   class LoggerMessages < SimpleDelegator

@@ -1,3 +1,5 @@
+require 'delegate'
+
 module Processor
   module Subroutine
     class Name < ::SimpleDelegator
