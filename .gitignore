@@ -7,6 +7,7 @@ Gemfile.lock
 /tmp
 /log
 /tags
+/coverage
 
 ## generic files to ignore
 *~
