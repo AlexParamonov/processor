@@ -7,7 +7,7 @@ module Processor
         raise NotImplementedError
       end
 
-      def query(requested_page)
+      def query(requested_page, per_page = batch_size)
         raise NotImplementedError
       end
 
