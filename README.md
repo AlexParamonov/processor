@@ -173,6 +173,9 @@ Call it using a `Processor::Thread`:
 Processor::Thread.new(migration).run_in_threads 5
 ```
 
+Note: on MRI ruby you could expect perfomance gain using threads if
+your application has resource consuming IO operations
+
 
 ### Observers
 Processor support unlimited number of observers that are watching
