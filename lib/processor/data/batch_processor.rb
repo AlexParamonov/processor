@@ -19,6 +19,7 @@ module Processor
 
       def fetch_batch
         @fetcher ||= query.each_slice(batch_size)
+        # TODO get rid of .next enumeration here
         @fetcher.next
       rescue StopIteration
         []
