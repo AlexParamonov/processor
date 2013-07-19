@@ -6,26 +6,30 @@ describe Processor::Data::BatchProcessor do
   it "should create and process records by batch" do
     processor = Processor::Data::BatchProcessor.new 2
 
-    watcher = mock
-    5.times do
-      watcher.should_receive(:created).ordered
-      watcher.should_receive(:created).ordered
-      watcher.should_receive(:processed).ordered
-      watcher.should_receive(:processed).ordered
-    end
+    records = (1..10).each_slice(2).map do |first_record, second_record|
+      record1 = mock("record_#{first_record}")
+      record2 = mock("record_#{second_record}")
+
+      record1.should_receive(:created).ordered
+      record2.should_receive(:created).ordered
+
+      record1.should_receive(:processed).ordered
+      record2.should_receive(:processed).ordered
+
+      [ record1, record2 ]
+    end.flatten
 
     query = Enumerator.new do |y|
-      a = 1
-      until a > 10
-        watcher.created
-        y << a
-        a += 1
+      while records.any?
+        record = records.shift
+        record.created
+        y << record
       end
     end
 
     processor.stub(query: query)
     processor.records.each do |record|
-      watcher.processed
+      record.processed
     end
   end
 

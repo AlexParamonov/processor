@@ -9,9 +9,7 @@ module Processor
 
       def records
         Enumerator.new do |result|
-          loop do
-            batch = fetch_batch
-            break if batch.count < 1
+          while (batch = fetch_batch).any?
             batch.each do |record|
               result << record
             end
@@ -22,6 +20,8 @@ module Processor
       def fetch_batch
         @fetcher ||= query.each_slice(batch_size)
         @fetcher.next
+      rescue StopIteration
+        []
       end
 
       def total_records
