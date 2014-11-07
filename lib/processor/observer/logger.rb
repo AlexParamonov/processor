@@ -34,7 +34,7 @@ module Processor
       end
 
       def after_record_error(result, record, exception)
-        logger.error "Error processing #{id_for record}: #{exception}"
+        logger.error "Error processing #{id_for record}: #{exception.inspect}"
       end
 
       def after_error(result, exception)
