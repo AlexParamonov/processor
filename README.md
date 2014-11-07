@@ -292,6 +292,7 @@ Compatibility
 tested with Ruby
 
 * 1.9.3
+* 2.1.4
 * rbx-19mode
 * ruby-head
 
