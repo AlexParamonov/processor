@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec", ">= 2.6"
+  gem.add_development_dependency "rspec", "~> 2.6"
   gem.add_development_dependency "pry" unless Processor::RUNNING_ON_CI
   gem.add_development_dependency "pry-plus" if "ruby" == RUBY_ENGINE && false == Processor::RUNNING_ON_CI
   gem.add_development_dependency "coveralls" if Processor::RUNNING_ON_CI
