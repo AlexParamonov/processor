@@ -37,6 +37,28 @@ describe Processor::Observer::Logger do
         ::Logger.should_receive(:new).and_return(ruby_logger)
         observer.logger.should eq ruby_logger
       end
+
+      it "sets log level to info by default" do
+        observer = subject
+        ::Logger.any_instance.should_receive(:level=).with(::Logger::INFO)
+        observer.logger
+      end
+
+      it "sets log level to user specified value" do
+        observer = described_class.new level: ::Logger::DEBUG
+        ::Logger.any_instance.should_receive(:level=).with(::Logger::DEBUG)
+        observer.logger
+      end
+    end
+
+    describe "hash" do
+      let(:logger) { { level: ::Logger::DEBUG } }
+
+      it "applies options to default logger" do
+        observer = subject
+        ::Logger.any_instance.should_receive(:level=).with(::Logger::DEBUG)
+        observer.logger
+      end
     end
   end
 

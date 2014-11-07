@@ -8,9 +8,15 @@ module Processor
   module Observer
     class Logger < NullObserver
       def initialize(logger = nil, options = {})
-        @logger_source = logger
+        if logger.is_a? Hash
+          @log_level = logger.fetch :level, ::Logger::INFO
+        else
+          @logger_source = logger
+        end
+
         @messages = options.fetch :messages, nil
         @messages = OpenStruct.new @messages if @messages.is_a? Hash
+
 
         super options
       end
@@ -47,13 +53,17 @@ module Processor
             @logger_source.call processor_name
           else
             @logger_source or ::Logger.new(create_log_filename(processor_name)).tap do |logger|
-              logger.level = ::Logger::INFO
+              logger.level = log_level
             end
           end
         end
       end
 
       private
+
+      def log_level
+        @log_level ||= ::Logger::INFO
+      end
 
       def messages
         @messages ||= LoggerMessages.new logger
