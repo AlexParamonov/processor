@@ -95,15 +95,7 @@ module Processor
       end
 
       def id_for record
-        [:uid, :id, :to_token, :token, :to_sym].each do |method|
-          return record.public_send method if record.respond_to? method
-        end
-
-        [:uid, :id, :token, :sym, :UID, :ID, :TOKEN, :SYM].each do |method|
-          return record[method] if record.key? method
-          return record[method.to_s] if record.key? method.to_s
-        end if record.respond_to?(:key?) && record.respond_to?(:[])
-
+        return processor.record_id record if processor.respond_to? :record_id
         record.to_s.strip
       end
     end

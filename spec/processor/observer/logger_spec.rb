@@ -9,6 +9,15 @@ describe Processor::Observer::Logger do
   let(:messenger) { ::Logger.new("/dev/null") }
   let(:logger) { ::Logger.new("/dev/null") }
 
+  describe "record_id" do
+    it "uses processor.record_id if possible" do
+      record = double :record
+
+      expect(processor).to receive(:record_id).with(record).and_return 1
+      subject.send(:id_for, record).should eq 1
+    end
+  end
+
   describe "logger" do
     describe "as proc" do
       let(:external_logger) { stub }
