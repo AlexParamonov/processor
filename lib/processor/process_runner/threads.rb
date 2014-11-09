@@ -17,7 +17,13 @@ module Processor
               begin
                 thread_data_processor.process(thread_record)
               rescue StandardError => exception
-                thread_data_processor.record_error thread_record, exception
+                command = catch(:command) do
+                  thread_data_processor.record_error thread_record, exception
+                end
+
+                # NOTE: redo can not be moved into a method or block
+                # to break from records loop, use Exception
+                redo if command == :redo
               end
             end
 

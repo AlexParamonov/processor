@@ -14,9 +14,9 @@ shared_examples_for "a records processor" do
   end
 
   describe "exception handling" do
-    describe "processing a record raised StandardError" do
-      let(:records) { 1..3 }
+    let(:records) { 1..3 }
 
+    describe "processing a record raised StandardError" do
       it "should continue processing" do
         processor.should_receive(:process).exactly(3).times.and_raise(StandardError)
         expect { process_runner.call processor }.to_not raise_error
@@ -33,6 +33,17 @@ shared_examples_for "a records processor" do
       it "should break processing" do
         processor.should_receive(:process).once.and_raise(Exception)
         expect { process_runner.call processor }.to raise_error(Exception)
+      end
+    end
+
+    describe "processing a record have requested a command run" do
+      it "should run redo command" do
+        processor.should_receive(:process).with(1).once.and_raise(StandardError)
+        processor.should_receive(:process).with(1).once
+        processor.should_receive(:process).exactly(2).times
+
+        processor.should_receive(:record_error).once.and_throw(:command, :redo)
+        process_runner.call processor
       end
     end
   end
