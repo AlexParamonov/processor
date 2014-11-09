@@ -39,11 +39,11 @@ module Processor
         messenger.message messages.finished
       end
 
-      def before_record_error(result, record, exception)
+      def before_record_error(record, exception)
         logger.error "Error processing #{id_for record}: #{exception.inspect}"
       end
 
-      def before_error(result, exception)
+      def before_error(exception)
         logger.fatal "Processing #{processor_name} FAILED: #{exception.backtrace}"
       end
 
