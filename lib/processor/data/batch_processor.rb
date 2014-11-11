@@ -2,6 +2,8 @@ require_relative 'null_processor'
 
 module Processor
   module Data
+    # TODO: Change it to be useful.
+    # Usually the external iterator is provided and #results are mapped to it
     class BatchProcessor < NullProcessor
       def initialize(batch_size = 10)
         @batch_size = batch_size
