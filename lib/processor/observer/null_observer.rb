@@ -7,7 +7,7 @@ module Processor
       attr_reader :processor
 
       def initialize(options = {})
-        @messenger = options.fetch :messenger, Processor::Messenger.new(:info, STDOUT, self.class.name)
+        @messenger = options.fetch :messenger, Processor::Messenger.new(:info, STDERR, self.class.name)
         @processor = options.fetch :processor, nil
       end
 
