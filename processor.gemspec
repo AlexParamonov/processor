@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.version       = Processor::VERSION
   gem.authors       = ["Alexander Paramonov"]
   gem.email         = ["alexander.n.paramonov@gmail.com"]
-  gem.summary       = %q{Universal processor for iteration over a collection with threads, logging and post processing}
+  gem.summary       = %q{Universal processor for threaded collection iteration, logging and post processing}
   gem.description   = %q{Processor is a tool that helps to iterate over collection and perform complex actions on a result. It is extremely useful in data migrations, report generation, etc. }
   gem.homepage      = "http://github.com/AlexParamonov/processor"
   gem.license       = "MIT"
