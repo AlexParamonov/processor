@@ -6,6 +6,7 @@ require "processor/data/batch_processor"
 require "processor/data/null_processor"
 require "processor/data/solr_pages_processor"
 require "processor/data/csv_processor"
+require "processor/data/active_record_batch_processor"
 
 require "processor/observer/logger"
 require "processor/observer/null_observer"

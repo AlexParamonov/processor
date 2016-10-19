@@ -1,3 +1,4 @@
+require "processor"
 if Processor::RUNNING_ON_CI
   require 'coveralls'
   Coveralls.wear!
